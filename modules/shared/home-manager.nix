@@ -18,7 +18,7 @@ let name = "andrew";
 	    editor = "vim";
         autocrlf = "input";
       };
-      commit.gpgsign = true;
+      commit.gpgsign = false;
       pull.rebase = true;
       rebase.autoStash = true;
     };
@@ -169,13 +169,7 @@ let name = "andrew";
       };
 
       dynamic_padding = true;
-      decorations = "full";
       title = "Terminal";
-      class = {
-        instance = "Alacritty";
-        general = "Alacritty";
-      };
-
       import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
 
     };
