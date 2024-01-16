@@ -7,7 +7,6 @@ with pkgs; [
   aspell
   bash-completion
   bat
-  btop
   coreutils
   killall
   neofetch
@@ -20,11 +19,8 @@ with pkgs; [
 
   # Encryption and security tools
   age
-  age-plugin-yubikey
   gnupg
   libfido2
-  pinentry
-  yubikey-manager
 
   # Media-related packages
   dejavu_fonts
@@ -44,6 +40,5 @@ with pkgs; [
   jq
   ripgrep
   tree
-  unrar
   unzip
 ]

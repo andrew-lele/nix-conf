@@ -31,8 +31,16 @@
       url = "git+ssh://git@github.com/andrew-lele/nix-secrets.git";
       flake = false;
     };
+    nixvim = {
+      url = "github:nix-community/nixvim";
+      # If you are not running an unstable channel of nixpkgs, select the corresponding branch of nixvim.
+      # url = "github:nix-community/nixvim/nixos-23.05";
+
+      # nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets } @inputs:
+  outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets, nixvim } @inputs:
+  # outputs = { self, darwin,  home-manager, nixpkgs, disko, agenix, secrets, nixvim } @inputs:
     let
       user = "le";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
@@ -79,7 +87,7 @@
 
       darwinConfigurations = let user = "le"; in {
         macos = darwin.lib.darwinSystem {
-          system = "aarch64-darwin";
+          system = "x86_64-darwin";
           specialArgs = inputs;
           modules = [
             home-manager.darwinModules.home-manager

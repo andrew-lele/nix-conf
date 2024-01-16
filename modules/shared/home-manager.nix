@@ -35,12 +35,11 @@ let name = "andrew";
       alias dnsr="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
     '';
     
-  }
-  nixvim = {
-    enable = true;
-    colorschemes.sweetpastel.enable = true;
-
-  }
+  };
+  # nixvim = {
+  #   enable = true;
+  #   colorschemes.sweetpastel.enable = true;
+  # };
   vim = {
     enable = true;
     plugins = with pkgs.vimPlugins; [ vim-airline vim-airline-themes vim-startify vim-tmux-navigator ];
@@ -177,7 +176,7 @@ let name = "andrew";
         general = "Alacritty";
       };
 
-      import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ]
+      import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
 
     };
   };
