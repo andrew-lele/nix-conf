@@ -2,7 +2,8 @@
 
 let name = "andrew";
     user = "le";
-    email = "andrew.le197@gmail.com"; in
+    email = "andrew.le197@gmail.com";
+in
 {
   # Shared shell configuration
   git = {
@@ -10,6 +11,7 @@ let name = "andrew";
     ignores = [ "*.swp" ];
     userName = name;
     userEmail = email;
+    signing.key = "FF8F4C5D2A2912B8";
     lfs = {
       enable = true; };
     extraConfig = {
@@ -18,9 +20,10 @@ let name = "andrew";
 	    editor = "vim";
         autocrlf = "input";
       };
-      commit.gpgsign = false;
+      commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
+
     };
   };
 
@@ -33,6 +36,7 @@ let name = "andrew";
       alias nhm="n $HOME/.config/home-manager/"
       alias drb="darwin-rebuild switch --flake ~/.config/nix-darwin"
       alias dnsr="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
+      alias nrb="cd $HOME/nix-conf/ && nix run .#build-switch"
     '';
     
   };
@@ -168,10 +172,12 @@ let name = "andrew";
         ];
       };
 
-      dynamic_padding = true;
-      title = "Terminal";
+      # title = "Terminal";
       import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
-
+      shell = {
+        program = "zsh";
+        args = [ "-c" "fish" ]; #work around to get fish starting LOL
+      };
     };
   };
 
