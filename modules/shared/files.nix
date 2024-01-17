@@ -1,7 +1,7 @@
 { pkgs, config, ... }:
 
 let
- githubPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBH619BlQeE/nBTN1fltmhWIhJfTRV94EqmpYuhBvNsT le@mac.self";
+ githubPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII1KyvVCIx66SNg5BEmKsJLN/vk5uWndtt6ayVzFs4Fw le@mac.self";
  githubSigningKey = ''
  -----BEGIN PGP PUBLIC KEY BLOCK-----
 
@@ -25,11 +25,11 @@ in
   ".ssh/id_github.pub" = {
     text = githubPublicKey;
   };
-  ".ssh/pgp_github.key" = {
+  ".ssh/pgp_github.pub" = {
     text = githubSigningKey;
   };
 
-  # Initializes Emacs with org-mode so we can tangle the main config
+# Initializes Emacs with org-mode so we can tangle the main config
 #  ".emacs.d/init.el" = {
 #    text = builtins.readFile ../shared/config/emacs/init.el;
 #  };
