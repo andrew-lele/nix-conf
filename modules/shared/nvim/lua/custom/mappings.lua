@@ -1,0 +1,48 @@
+local M = {}
+return M
+-- vim.g.mapleader = " "
+-- vim.o.ruler = true
+-- vim.o.rnu = true
+-- vim.o.clipboard=autoselect
+-- vim.o.showmode= true
+-- vim.o.tabstop= 8
+-- vim.o.shiftwidth= 2
+-- vim.o.softtabstop= 2
+-- vim.o.expandtab = true
+-- 
+-- -- relative numbers with line by default; absoulte numbers when inserting
+-- vim.o.number = true
+-- vim.o.relativenumber = true
+-- vim.o.cursorline = true
+-- -- Can't get the autocommand to work; show absolute numbers in insert mode
+-- -- local numbertogglegroup = vim.api.nvim_create_augroup("numbertoggle", {clear = true})
+-- -- vim.api.nvim_create_autocmd(
+-- --     "InsertLeave",
+-- --     {
+-- --         pattern = '*',
+-- --         callback = function()
+-- --             vim.opt.number.relativenumber = true
+-- --         end,
+-- --         group = numbertogglegroup
+-- --     })
+-- -- vim.api.nvim_create_autocmd(
+-- --     "InsertEnter",
+-- --     {
+-- --         pattern = '*',
+-- --         callback = function()
+-- --             vim.opt.number.relativenumber = false
+-- --         end,
+-- --         group = numbertogglegroup
+-- --     })
+-- 
+-- -- sudo it baby
+-- vim.keymap.set('c', 'w!!', '<cmd>w !sudo tee % >/dev/null<cr>')
+-- -- window movement
+-- vim.keymap.set('n', '<tab>', '<cmd>bnext<cr>')
+-- vim.keymap.set('n', '<S-tab>', '<cmd>bprev<cr>')
+-- vim.keymap.set('n', '<C-h>', '<C-h>h')
+-- vim.keymap.set('n', '<C-j>', '<C-j>j')
+-- vim.keymap.set('n', '<C-k>', '<C-k>k')
+-- vim.keymap.set('n', '<C-l>', '<C-l>l')
+-- -- easy copy
+-- vim.keymap.set('n', 'Y', 'y$')

@@ -40,10 +40,7 @@ in
     '';
     
   };
-  # nixvim = {
-  #   enable = true;
-  #   colorschemes.sweetpastel.enable = true;
-  # };
+  neovim = import ./nvim/default.nix { inherit config lib pkgs; };
   vim = {
     enable = true;
     plugins = with pkgs.vimPlugins; [ vim-airline vim-airline-themes vim-startify vim-tmux-navigator ];

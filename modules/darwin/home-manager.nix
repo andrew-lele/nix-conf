@@ -52,7 +52,6 @@ in
           additionalFiles
           # { "emacs-launcher.command".source = myEmacsLauncher; }
         ];
-
         stateVersion = "23.11";
       };
       programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
@@ -68,19 +67,19 @@ in
     dock = {
       enable = true;
       entries = [
-        { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
+ #       { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
         { path = "/System/Applications/Home.app/"; }
-        { path = "/System/Applications/Arc.app/"; }
+#        { path = "/System/Applications/Arc.app/"; }
         {
           path = "${config.users.users.${user}.home}/.local/share/";
           section = "others";
           options = "--sort name --view grid --display folder";
         }
-        {
-          path = "${config.users.users.${user}.home}/.local/share/downloads";
-          section = "others";
-          options = "--sort name --view grid --display stack";
-        }
+#        {
+#          path = "${config.users.users.${user}.home}/.local/share/downloads";
+#          section = "others";
+#          options = "--sort name --view grid --display stack";
+#        }
       ];
     };
   };
