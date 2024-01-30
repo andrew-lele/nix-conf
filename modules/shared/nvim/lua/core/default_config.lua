@@ -8,7 +8,11 @@ M.ui = {
   ------------------------------- base46 -------------------------------------
   -- hl = highlights
   hl_add = {},
-  hl_override = {},
+  hl_override = {
+    CursorLine = {
+      bg = "white"
+    },
+  },
   changed_themes = {},
   theme_toggle = { "gruvchad", "gruvbox_light" },
   theme = "gruvchad", -- default theme
