@@ -11,6 +11,12 @@
     yaml-language-server
     # Telescope
     ripgrep
+    yamlfmt
+    yamllint
+    yaml-language-server
+    golangci-lint
+    golangci-lint-langserver
+    shellcheck
   ];
 
   plugins = with pkgs.vimPlugins; [

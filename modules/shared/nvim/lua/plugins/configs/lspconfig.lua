@@ -37,8 +37,9 @@ M.capabilities.textDocument.completion.completionItem = {
     },
   },
 }
+local lspconfig = require "lspconfig"
 
-require("lspconfig").lua_ls.setup {
+lspconfig.lua_ls.setup {
   on_attach = M.on_attach,
   capabilities = M.capabilities,
 
@@ -60,5 +61,19 @@ require("lspconfig").lua_ls.setup {
     },
   },
 }
+
+local servers = {
+  "nil_ls",
+  "rust_analyzer",
+  "tsserver",
+  "taplo"
+}
+
+for _, lsp in ipairs(servers) do
+  lspconfig[lsp].setup {
+    on_attach = M.on_attach,
+    capabilities = M.capabilities,
+  }
+end
 
 return M
