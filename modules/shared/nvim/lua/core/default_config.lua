@@ -10,6 +10,7 @@ M.ui = {
   hl_add = {},
   hl_override = {
     CursorLine = {
+      bg = "grey",
     },
   },
   changed_themes = {},

@@ -17,6 +17,7 @@
     golangci-lint
     golangci-lint-langserver
     shellcheck
+    nixpkgs-fmt
   ];
 
   plugins = with pkgs.vimPlugins; [
