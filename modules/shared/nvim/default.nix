@@ -81,9 +81,7 @@
         else
           drv;
       lazyPath = pkgs.linkFarm "lazy-plugins" (builtins.map mkEntryFromDrv plugins);
-      vimrc = builtins.readFile ./vimrc.lua;
       in
-      with pkgs;
       ''
 require "core"
 
