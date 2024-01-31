@@ -58,7 +58,6 @@ exec fish
       
       # Goes at the end:
       direnv hook fish | source
-      starship init fish | source
 
     '';
     
