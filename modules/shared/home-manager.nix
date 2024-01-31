@@ -28,9 +28,6 @@ in
   };
 
   fish = {
-    plugins = with pkgs.fishPlugins; [
-      # { name = "tide"; src = tide.src; }
-    ];
     enable = true;
     shellInit = ''
     '';
@@ -43,6 +40,10 @@ in
       alias drb="darwin-rebuild switch --flake ~/.config/nix-darwin"
       alias dnsr="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
       alias nrb="cd $HOME/nix-conf/ && nix run .#build-switch"
+      
+      # Goes at the end:
+      starship init fish | source
+
     '';
     
   };
@@ -206,5 +207,32 @@ in
           IdentityFile /Users/${user}/.ssh/gitlab
         '')
     ];
+  };
+  starship = {
+    enable = true;
+    # Configuration written to ~/.config/starship.toml
+    settings = {
+      add_newline = false;
+      format = "$directory$nix_shell$kubernetes$rust$battery";
+      directory = {
+        disabled = false;
+        format = "󰈺 ~ [$path]($style)[$read_only]($read_only_style) ";
+      };
+      kubernetes = {
+        disabled = false;
+        format = "[󱃾 $context/\($namespace\)](bold red) ";
+      };
+      nix_shell = {
+        disabled = false;
+        impure_msg = "[impure shell](bold red)";
+        pure_msg = "[pure shell](bold green)";
+        unknown_msg = "[unknown shell](bold yellow)";
+        format = "via [☃️ $state( \($name\))](bold blue) ";
+      };
+      rust = {
+        disabled = false ;
+        format =  "[󰭼 $version](red bold)";
+      };
+    };
   };
 }
