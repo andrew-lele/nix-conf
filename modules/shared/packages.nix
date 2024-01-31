@@ -16,27 +16,29 @@ with pkgs; [
   wget
   zip
   fish
+  # kubectl
+  # helm
 
   # Encryption and security tools
   age
   gnupg
   libfido2
 
-  # Media-related packages
-  dejavu_fonts
-  ffmpeg
+  # dejavu_fonts
   fd
-  font-awesome
-  hack-font
   noto-fonts
   noto-fonts-emoji
   meslo-lgs-nf
-
+  (nerdfonts.override { fonts = [ 
+    "JetBrainsMono"
+    # "Powerline Symbols"
+  ];})
+  powerline-symbols
+  powerline-fonts
   # Text and terminal utilities
   htop
   hunspell
   iftop
-  jetbrains-mono
   jq
   ripgrep
   tree
