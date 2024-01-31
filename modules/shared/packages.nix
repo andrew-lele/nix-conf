@@ -16,8 +16,8 @@ with pkgs; [
   wget
   zip
   fish
-  # kubectl
-  # helm
+  kubectl
+  kubernetes-helm
 
   # Encryption and security tools
   age
@@ -26,12 +26,11 @@ with pkgs; [
 
   # dejavu_fonts
   fd
-  noto-fonts
-  noto-fonts-emoji
+  # noto-fonts
+  # noto-fonts-emoji
   meslo-lgs-nf
   (nerdfonts.override { fonts = [ 
     "JetBrainsMono"
-    # "Powerline Symbols"
   ];})
   powerline-symbols
   powerline-fonts
