@@ -16,13 +16,8 @@ with pkgs; [
   wget
   zip
   fish
-  zsh
   kubectl
   kubernetes-helm
-  kubernetes-helmPlugins.helm-unittest
-  rustup
-  starship
-  
 
   # Encryption and security tools
   age
