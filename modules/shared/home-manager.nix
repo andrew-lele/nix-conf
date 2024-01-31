@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let name = "andrew";
-    user = "le";
+    user = "andle";
     email = "andrew.le197@gmail.com";
 in
 {
@@ -193,7 +193,7 @@ exec fish
       };
 
       # title = "Terminal";
-      import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
+      import = [ "/Users/${user}/.config/alacritty/themes/gruvbox_material_medium_dark.toml" ];
       shell = {
         program = "zsh";
       };
@@ -218,7 +218,7 @@ exec fish
         '')
       (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
         ''
-          IdentityFile /Users/${user}/.ssh/id_github
+          IdentityFile /Users/${user}/.ssh/gitlab
         '')
     ];
   };

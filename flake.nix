@@ -35,7 +35,7 @@
   outputs = { self, darwin, nix-homebrew, homebrew-bundle, homebrew-core, homebrew-cask, home-manager, nixpkgs, disko, agenix, secrets, } @inputs:
   # outputs = { self, darwin,  home-manager, nixpkgs, disko, agenix, secrets, nixvim } @inputs:
     let
-      user = "le";
+      user = "andle";
       linuxSystems = [ "x86_64-linux" "aarch64-linux" ];
       darwinSystems = [ "aarch64-darwin" "x86_64-darwin" ];
       forAllSystems = f: nixpkgs.lib.genAttrs (linuxSystems ++ darwinSystems) f;
@@ -78,9 +78,9 @@
       devShells = forAllSystems devShell;
       apps = nixpkgs.lib.genAttrs linuxSystems mkLinuxApps // nixpkgs.lib.genAttrs darwinSystems mkDarwinApps;
 
-      darwinConfigurations = let user = "le"; in {
+      darwinConfigurations = let user = "andle"; in {
         macos = darwin.lib.darwinSystem {
-          system = "x86_64-darwin";
+          system = "aarch64-darwin";
           specialArgs = inputs;
           modules = [
             home-manager.darwinModules.home-manager
