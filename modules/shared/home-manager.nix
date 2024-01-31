@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 let name = "andrew";
-    user = "le";
+    user = "andle";
     email = "andrew.le197@gmail.com";
 in
 {
@@ -11,7 +11,7 @@ in
     ignores = [ "*.swp" ];
     userName = name;
     userEmail = email;
-    signing.key = "FF8F4C5D2A2912B8";
+    signing.key = "7696B78D091E7F02";
     lfs = {
       enable = true; };
     extraConfig = {
@@ -170,7 +170,7 @@ in
       };
 
       # title = "Terminal";
-      import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
+      import = [ "/Users/${user}/.config/alacritty/themes/gruvbox_material_medium_dark.toml" ];
       shell = {
         program = "zsh";
         args = [ "-c" "fish" ]; #work around to get fish starting LOL
@@ -193,7 +193,7 @@ in
         '')
       (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
         ''
-          IdentityFile /Users/${user}/.ssh/id_github
+          IdentityFile /Users/${user}/.ssh/gitlab
         '')
     ];
   };
