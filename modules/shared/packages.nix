@@ -38,11 +38,15 @@ with pkgs; [
   # noto-fonts
   # noto-fonts-emoji
   meslo-lgs-nf
+<<<<<<< HEAD
   (nerdfonts.override { fonts = [ 
     "JetBrainsMono"
   ];})
   powerline-symbols
   powerline-fonts
+=======
+
+>>>>>>> 24eaa36 (fix: alacritty, add some gitsigns. remove nerd fonts)
   # Text and terminal utilities
   htop
   hunspell

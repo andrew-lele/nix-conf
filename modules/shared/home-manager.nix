@@ -37,10 +37,15 @@ exec fish
     '';
   };
   fish = {
+    plugins = with pkgs.fishPlugins; [
+    ];
     enable = true;
+<<<<<<< HEAD
     plugins = with pkgs.fishPlugins; [
       { name = "autopair"; src = autopair.src; }
     ];
+=======
+>>>>>>> 24eaa36 (fix: alacritty, add some gitsigns. remove nerd fonts)
     shellInit = ''
     '';
     interactiveShellInit = ''
@@ -196,6 +201,11 @@ exec fish
       import = [ "/Users/${user}/.config/alacritty/themes/gruvbox_material_medium_dark.toml" ];
       shell = {
         program = "zsh";
+<<<<<<< HEAD
+=======
+        # program = "/Users/${user}/.nix-profile/bin/fish";
+        # args = [ "-l" ] ;
+>>>>>>> 24eaa36 (fix: alacritty, add some gitsigns. remove nerd fonts)
       };
       window = {
         option_as_alt = "OnlyLeft";

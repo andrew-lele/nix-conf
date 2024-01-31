@@ -72,7 +72,7 @@ in
       enable = true;
       entries = [
         { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
-#        { path = "/System/Applications/Arc.app/"; }
+       # { path = "/System/Applications/Arc.app/"; }
         {
           path = "${config.users.users.${user}.home}/.local/share/";
           section = "others";
