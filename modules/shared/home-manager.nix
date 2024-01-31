@@ -29,6 +29,7 @@ in
 
   fish = {
     plugins = with pkgs.fishPlugins; [
+      # { name = "tide"; src = tide.src; }
     ];
     enable = true;
     shellInit = ''
