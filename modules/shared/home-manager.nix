@@ -28,9 +28,14 @@ in
   };
 
   fish = {
+    plugins = with pkgs.fishPlugins; [
+    ];
     enable = true;
+    shellInit = ''
+    '';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
+
       alias n="nvim"
       alias hms="home-manager switch"
       alias nhm="n $HOME/.config/home-manager/"
@@ -173,7 +178,11 @@ in
       import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
       shell = {
         program = "zsh";
-        args = [ "-c" "fish" ]; #work around to get fish starting LOL
+        # program = "/Users/${user}/.nix-profile/bin/fish";
+        # args = [ "-l" ] ;
+      };
+      window = {
+        option_as_alt = "OnlyLeft";
       };
     };
   };

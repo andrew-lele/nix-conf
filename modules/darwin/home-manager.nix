@@ -67,7 +67,7 @@ in
     dock = {
       enable = true;
       entries = [
- #       { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
+        { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
         { path = "/System/Applications/Home.app/"; }
 #        { path = "/System/Applications/Arc.app/"; }
         {

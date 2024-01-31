@@ -343,19 +343,19 @@ M.nvterm = {
     },
 
     -- new
-    ["<leader>h"] = {
-      function()
-        require("nvterm.terminal").new "horizontal"
-      end,
-      "New horizontal term",
-    },
+    -- ["<leader>h"] = {
+    --   function()
+    --     require("nvterm.terminal").new "horizontal"
+    --   end,
+    --   "New horizontal term",
+    -- },
 
-    ["<leader>v"] = {
-      function()
-        require("nvterm.terminal").new "vertical"
-      end,
-      "New vertical term",
-    },
+  --   ["<leader>v"] = {
+  --     function()
+  --       require("nvterm.terminal").new "vertical"
+  --     end,
+  --     "New vertical term",
+  --   },
   },
 }
 
@@ -435,21 +435,21 @@ M.gitsigns = {
     },
 
     -- Actions
-    ["<leader>rh"] = {
+    ["<leader>hr"] = {
       function()
         require("gitsigns").reset_hunk()
       end,
       "Reset hunk",
     },
 
-    ["<leader>ph"] = {
+    ["<leader>hp"] = {
       function()
         require("gitsigns").preview_hunk()
       end,
       "Preview hunk",
     },
 
-    ["<leader>gb"] = {
+    ["<leader>hb"] = {
       function()
         package.loaded.gitsigns.blame_line()
       end,
@@ -461,6 +461,18 @@ M.gitsigns = {
         require("gitsigns").toggle_deleted()
       end,
       "Toggle deleted",
+    },
+    ["<leader>hS"] = {
+      function()
+        require("gitsigns").stage_buffer()
+      end,
+      "Stage buffer",
+    },
+    ["<leader>hu"] = {
+      function()
+        require("gitsigns").undo_stage_hunk()
+      end,
+      "Undo stage",
     },
   },
 }
