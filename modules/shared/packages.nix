@@ -18,6 +18,9 @@ with pkgs; [
   fish
   kubectl
   kubernetes-helm
+  rustup
+  starship
+  
 
   # Encryption and security tools
   age

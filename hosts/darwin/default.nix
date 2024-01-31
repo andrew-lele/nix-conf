@@ -90,13 +90,12 @@ let user = "le"; in
 
       trackpad = {
         Clicking = true;
-        TrackpadThreeFingerDrag = true;
       };
     };
 
     keyboard = {
       enableKeyMapping = true;
-      remapCapsLockToControl = true;
+      remapCapsLockToEscape = true;
     };
   };
 }
