@@ -55,7 +55,7 @@ in
         ];
         stateVersion = "23.11";
         sessionVariables = {
-          # KUBECONFIG = "~/.kube/config";
+          KUBECONFIG = "~/.kube/config";
         };
       };
       programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
