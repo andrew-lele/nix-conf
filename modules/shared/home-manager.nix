@@ -213,10 +213,18 @@ in
     # Configuration written to ~/.config/starship.toml
     settings = {
       add_newline = false;
-      format = "$directory$nix_shell$kubernetes$rust$battery";
+      format = ''
+󰶞 $directory$nix_shell$kubernetes$helm$rust$battery
+󱅾 }  
+      '';
       directory = {
         disabled = false;
-        format = "󰈺 ~ [$path]($style)[$read_only]($read_only_style) ";
+        format = " ~ [$path]($style)[$read_only]($read_only_style) ";
+      };
+      git_status = {
+        disabled = false;
+        ahead = "⇕⇡$\{ahead_count}⇣$\{behind_count}";
+        behind = "⇣$\{count}";
       };
       kubernetes = {
         disabled = false;
@@ -230,8 +238,16 @@ in
         format = "via [☃️ $state( \($name\))](bold blue) ";
       };
       rust = {
-        disabled = false ;
-        format =  "[󰭼 $version](red bold)";
+        disabled = false;
+        format =  "[ $version](red bold)";
+      };
+      helm = {
+        disabled = false;
+        format = "[⎈ $version](bold white) ";
+      };
+      battery = {
+        disabled = false;
+        format = "[$percentage$symbol]($style) ";
       };
     };
   };
