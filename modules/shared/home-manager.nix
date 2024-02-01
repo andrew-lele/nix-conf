@@ -9,22 +9,25 @@ in
   git = {
     enable = true;
     ignores = [ "*.swp" ];
-    userName = name;
-    userEmail = email;
-    signing.key = "7696B78D091E7F02";
-    lfs = {
-      enable = true; };
+    # userName = name;
+    # userEmail = email;
+    # signing.key = "7696B78D091E7F02";
     extraConfig = {
+      # commit.gpgsign = true;
       init.defaultBranch = "main";
       core = { 
 	    editor = "vim";
         autocrlf = "input";
       };
-      commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
-
     };
+    lfs = {
+      enable = true; 
+    };
+    userName = "andrew";
+    userEmail = "andle@paloaltonetworks.com";
+    signing.key = "";
   };
 
   fish = {
@@ -40,6 +43,7 @@ in
       alias drb="darwin-rebuild switch --flake ~/.config/nix-darwin"
       alias dnsr="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
       alias nrb="cd $HOME/nix-conf/ && nix run .#build-switch"
+      alias k="kubectl"
       
       # Goes at the end:
       starship init fish | source
@@ -190,7 +194,7 @@ in
   };
 
   ssh = {
-    enable = true;
+    enable = false;
 
     extraConfig = lib.mkMerge [
       ''
@@ -214,12 +218,16 @@ in
     settings = {
       add_newline = false;
       format = ''
-󰶞 $directory$nix_shell$git_status$kubernetes$helm$rust$battery
-󱅾 }  
+󰶞 $directory$git_branch$git_status$kubernetes$helm$rust$battery
+󱅾 $nix_shell}  
       '';
       directory = {
         disabled = false;
         format = " ~ [$path]($style)[$read_only]($read_only_style) ";
+      };
+      git_branch = {
+        disabled = false;
+        symbol = "󱐚 ";
       };
       git_status = {
         disabled = false;
