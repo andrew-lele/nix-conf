@@ -13,15 +13,14 @@ in
     userEmail = email;
     signing.key = "7696B78D091E7F02";
     extraConfig = {
+      # commit.gpgsign = true;
       init.defaultBranch = "main";
       core = { 
 	    editor = "vim";
         autocrlf = "input";
       };
-      commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
-
     };
     lfs = {
       enable = true; 
@@ -40,12 +39,6 @@ exec fish
     plugins = with pkgs.fishPlugins; [
     ];
     enable = true;
-<<<<<<< HEAD
-    plugins = with pkgs.fishPlugins; [
-      { name = "autopair"; src = autopair.src; }
-    ];
-=======
->>>>>>> 24eaa36 (fix: alacritty, add some gitsigns. remove nerd fonts)
     shellInit = ''
     '';
     interactiveShellInit = ''
@@ -214,7 +207,7 @@ exec fish
   };
 
   ssh = {
-    enable = true;
+    enable = false;
 
     extraConfig = lib.mkMerge [
       ''
@@ -238,12 +231,16 @@ exec fish
     settings = {
       add_newline = false;
       format = ''
-󰶞 $directory$nix_shell$git_status$kubernetes$helm$rust$battery
-󱅾 }  
+󰶞 $directory$git_branch$git_status$kubernetes$helm$rust$battery
+󱅾 $nix_shell}  
       '';
       directory = {
         disabled = false;
         format = " ~ [$path]($style)[$read_only]($read_only_style) ";
+      };
+      git_branch = {
+        disabled = false;
+        symbol = "󱐚 ";
       };
       git_status = {
         disabled = false;
