@@ -66,7 +66,8 @@ local servers = {
   "nil_ls",
   "rust_analyzer",
   "tsserver",
-  "taplo"
+  "taplo",
+  "yamlls",
 }
 
 for _, lsp in ipairs(servers) do
@@ -75,5 +76,15 @@ for _, lsp in ipairs(servers) do
     capabilities = M.capabilities,
   }
 end
+
+lspconfig.helm_ls.setup {
+  settings = {
+    ['helm-ls'] = {
+      yamlls = {
+        path = "yaml-language-server",
+      }
+    }
+  }
+}
 
 return M
