@@ -16,30 +16,42 @@ with pkgs; [
   wget
   zip
   fish
+  zsh
+  kubectl
+  kubernetes-helm
+  kubernetes-helmPlugins.helm-unittest
+  rustup
+  starship
+  
 
   # Encryption and security tools
   age
   gnupg
   libfido2
 
-  # Media-related packages
-  dejavu_fonts
-  ffmpeg
+  # dejavu_fonts
   fd
-  font-awesome
-  hack-font
-  noto-fonts
-  noto-fonts-emoji
+  # noto-fonts
+  # noto-fonts-emoji
   meslo-lgs-nf
-  nerdfonts
-
+  (nerdfonts.override { fonts = [ 
+    "JetBrainsMono"
+  ];})
+  powerline-symbols
+  powerline-fonts
   # Text and terminal utilities
   htop
   hunspell
   iftop
-  jetbrains-mono
   jq
   ripgrep
   tree
   unzip
+
+#work
+  # google-cloud-sdk
+  (google-cloud-sdk.withExtraComponents( with google-cloud-sdk.components; [
+    gke-gcloud-auth-plugin
+  ]))
+  hugo
 ]

@@ -30,8 +30,8 @@ M.general = {
     ["<C-c>"] = { "<cmd> %y+ <CR>", "Copy whole file" },
 
     -- line numbers
-    ["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
-    ["<leader>rn"] = { "<cmd> set rnu! <CR>", "Toggle relative number" },
+    -- ["<leader>n"] = { "<cmd> set nu! <CR>", "Toggle line number" },
+    -- ["<leader>rn"] = { "<cmd> set rnu! <CR>", "Toggle relative number" },
 
     -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
     -- http://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
@@ -51,6 +51,31 @@ M.general = {
         vim.lsp.buf.format { async = true }
       end,
       "LSP formatting",
+    },
+
+    ["<leader>ha"] = {
+      function()
+        vim.cmd "Git add"
+      end,
+      "Git add",
+    },
+    ["<leader>hc"] = {
+      function()
+        vim.cmd("Git commit")
+      end,
+      "Git commit",
+    },
+    ["<leader>hm"] = {
+      function()
+        vim.cmd("Git mergetool")
+      end,
+      "Git Merge Tool",
+    },
+    ["<leader>hd"] = {
+      function()
+        vim.cmd("Git difftool")
+      end,
+      "Git Diff Tool",
     },
   },
 
@@ -343,19 +368,19 @@ M.nvterm = {
     },
 
     -- new
-    ["<leader>h"] = {
-      function()
-        require("nvterm.terminal").new "horizontal"
-      end,
-      "New horizontal term",
-    },
+    -- ["<leader>h"] = {
+    --   function()
+    --     require("nvterm.terminal").new "horizontal"
+    --   end,
+    --   "New horizontal term",
+    -- },
 
-    ["<leader>v"] = {
-      function()
-        require("nvterm.terminal").new "vertical"
-      end,
-      "New vertical term",
-    },
+  --   ["<leader>v"] = {
+  --     function()
+  --       require("nvterm.terminal").new "vertical"
+  --     end,
+  --     "New vertical term",
+  --   },
   },
 }
 
@@ -435,21 +460,21 @@ M.gitsigns = {
     },
 
     -- Actions
-    ["<leader>rh"] = {
+    ["<leader>hr"] = {
       function()
         require("gitsigns").reset_hunk()
       end,
       "Reset hunk",
     },
 
-    ["<leader>ph"] = {
+    ["<leader>hp"] = {
       function()
         require("gitsigns").preview_hunk()
       end,
       "Preview hunk",
     },
 
-    ["<leader>gb"] = {
+    ["<leader>hb"] = {
       function()
         package.loaded.gitsigns.blame_line()
       end,
@@ -461,6 +486,18 @@ M.gitsigns = {
         require("gitsigns").toggle_deleted()
       end,
       "Toggle deleted",
+    },
+    ["<leader>hS"] = {
+      function()
+        require("gitsigns").stage_buffer()
+      end,
+      "Stage buffer",
+    },
+    ["<leader>hu"] = {
+      function()
+        require("gitsigns").undo_stage_hunk()
+      end,
+      "Undo stage",
     },
   },
 }

@@ -13,4 +13,5 @@ local options = {
     lsp_fallback = true,
   },
 }
-require("conform").setup(options)
+-- require("conform").setup(options)
+return options

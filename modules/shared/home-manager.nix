@@ -27,16 +27,39 @@ in
     };
   };
 
+  zsh = {
+    enable = true;
+    enableAutosuggestions = true;
+    enableCompletion = true;
+    initExtraBeforeCompInit = ''
+exec fish
+    '';
+  };
   fish = {
     enable = true;
+    plugins = with pkgs.fishPlugins; [
+      { name = "autopair"; src = autopair.src; }
+    ];
+    shellInit = ''
+    '';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
+      set -U USE_GKE_GCLOUD_AUTH_PLUGIN True
+      set -U GCLOUD_ACCOUNT "$USER@paloaltonetworks.com"
+
       alias n="nvim"
       alias hms="home-manager switch"
       alias nhm="n $HOME/.config/home-manager/"
       alias drb="darwin-rebuild switch --flake ~/.config/nix-darwin"
       alias dnsr="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
       alias nrb="cd $HOME/nix-conf/ && nix run .#build-switch"
+      alias k="kubectl"
+      alias untt="helm dep update && ~/.nix-profile/helm-unittest/untt ."
+      alias mfa="~/scripts/mfa.sh"
+      
+      # Goes at the end:
+      starship init fish | source
+
     '';
     
   };
@@ -173,7 +196,9 @@ in
       import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
       shell = {
         program = "zsh";
-        args = [ "-c" "fish" ]; #work around to get fish starting LOL
+      };
+      window = {
+        option_as_alt = "OnlyLeft";
       };
     };
   };
@@ -196,5 +221,48 @@ in
           IdentityFile /Users/${user}/.ssh/id_github
         '')
     ];
+  };
+  starship = {
+    enable = true;
+    # Configuration written to ~/.config/starship.toml
+    settings = {
+      add_newline = false;
+      format = ''
+󰶞 $directory$nix_shell$git_status$kubernetes$helm$rust$battery
+󱅾 }  
+      '';
+      directory = {
+        disabled = false;
+        format = " ~ [$path]($style)[$read_only]($read_only_style) ";
+      };
+      git_status = {
+        disabled = false;
+        ahead = "⇕⇡$\{ahead_count}⇣$\{behind_count}";
+        behind = "⇣$\{count}";
+      };
+      kubernetes = {
+        disabled = false;
+        format = "[󱃾 $context/\($namespace\)](bold red) ";
+      };
+      nix_shell = {
+        disabled = false;
+        impure_msg = "[impure shell](bold red)";
+        pure_msg = "[pure shell](bold green)";
+        unknown_msg = "[unknown shell](bold yellow)";
+        format = "via [☃️ $state( \($name\))](bold blue) ";
+      };
+      rust = {
+        disabled = false;
+        format =  "[ $version](red bold)";
+      };
+      helm = {
+        disabled = false;
+        format = "[⎈ $version](bold white) ";
+      };
+      battery = {
+        disabled = false;
+        format = "[$percentage$symbol]($style) ";
+      };
+    };
   };
 }

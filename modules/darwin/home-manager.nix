@@ -20,7 +20,8 @@ in
     name = "${user}";
     home = "/Users/${user}";
     isHidden = false;
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
+    # shell = pkgs.fish;
   };
 
   homebrew = {
@@ -53,6 +54,9 @@ in
           # { "emacs-launcher.command".source = myEmacsLauncher; }
         ];
         stateVersion = "23.11";
+        sessionVariables = {
+          # KUBECONFIG = "~/.kube/config";
+        };
       };
       programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
 
@@ -67,8 +71,7 @@ in
     dock = {
       enable = true;
       entries = [
- #       { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
-        { path = "/System/Applications/Home.app/"; }
+        { path = "${pkgs.alacritty}/Applications/Alacritty.app/"; }
 #        { path = "/System/Applications/Arc.app/"; }
         {
           path = "${config.users.users.${user}.home}/.local/share/";
