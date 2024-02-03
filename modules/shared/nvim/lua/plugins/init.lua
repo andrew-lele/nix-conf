@@ -287,6 +287,14 @@ local default_plugins = {
     "mfussenegger/nvim-dap",
     ft = { 'rust' },
   },
+  {
+    "tpope/vim-fugitive",
+    lazy = false,
+  },
+  {
+    "towolf/vim-helm",
+    ft = 'helm'
+  },
 }
 
 local config = require("core.utils").load_config()

@@ -67,6 +67,7 @@ local servers = {
   "rust_analyzer",
   "tsserver",
   "taplo",
+  "yamlls",
 }
 
 for _, lsp in ipairs(servers) do
