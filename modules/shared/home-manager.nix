@@ -27,12 +27,25 @@ in
     };
   };
 
+  zsh = {
+    enable = true;
+    enableAutosuggestions = true;
+    enableCompletion = true;
+    initExtraBeforeCompInit = ''
+exec fish
+    '';
+  };
   fish = {
     enable = true;
+    plugins = with pkgs.fishPlugins; [
+      { name = "autopair"; src = autopair.src; }
+    ];
     shellInit = ''
     '';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
+      set -U USE_GKE_GCLOUD_AUTH_PLUGIN True
+      set -U GCLOUD_ACCOUNT "$USER@paloaltonetworks.com"
 
       alias n="nvim"
       alias hms="home-manager switch"
@@ -40,6 +53,9 @@ in
       alias drb="darwin-rebuild switch --flake ~/.config/nix-darwin"
       alias dnsr="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
       alias nrb="cd $HOME/nix-conf/ && nix run .#build-switch"
+      alias k="kubectl"
+      alias untt="helm dep update && ~/.nix-profile/helm-unittest/untt ."
+      alias mfa="~/scripts/mfa.sh"
       
       # Goes at the end:
       starship init fish | source
@@ -180,8 +196,6 @@ in
       import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
       shell = {
         program = "zsh";
-        # program = "/Users/${user}/.nix-profile/bin/fish";
-        # args = [ "-l" ] ;
       };
       window = {
         option_as_alt = "OnlyLeft";

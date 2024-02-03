@@ -20,7 +20,8 @@ in
     name = "${user}";
     home = "/Users/${user}";
     isHidden = false;
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
+    # shell = pkgs.fish;
   };
 
   homebrew = {
@@ -54,7 +55,7 @@ in
         ];
         stateVersion = "23.11";
         sessionVariables = {
-          KUBECONFIG = "~/.kube/config";
+          # KUBECONFIG = "~/.kube/config";
         };
       };
       programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };

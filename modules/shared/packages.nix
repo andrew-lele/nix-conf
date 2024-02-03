@@ -16,8 +16,10 @@ with pkgs; [
   wget
   zip
   fish
+  zsh
   kubectl
   kubernetes-helm
+  kubernetes-helmPlugins.helm-unittest
   rustup
   starship
   
@@ -51,4 +53,5 @@ with pkgs; [
   (google-cloud-sdk.withExtraComponents( with google-cloud-sdk.components; [
     gke-gcloud-auth-plugin
   ]))
+  hugo
 ]

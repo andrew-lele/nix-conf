@@ -66,6 +66,8 @@
         vim-illuminate
         vim-startuptime
         which-key-nvim
+        vim-fugitive
+        vim-helm
         { name = "LuaSnip"; path = luasnip; }
         { name = "catppuccin"; path = catppuccin-nvim; }
         { name = "mini.ai"; path = mini-nvim; }

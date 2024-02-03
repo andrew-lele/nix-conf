@@ -56,8 +56,6 @@ let user = "le";
 
     # My shell
     fish.enable = true;
-
-    nixvim.enable = true;
   };
 
   services = {
