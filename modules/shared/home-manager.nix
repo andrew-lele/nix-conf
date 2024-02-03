@@ -7,23 +7,24 @@ in
 {
   # Shared shell configuration
   git = {
-    enable = true;
+    enable = false;
     ignores = [ "*.swp" ];
     userName = name;
     userEmail = email;
-    signing.key = "FF8F4C5D2A2912B8";
-    lfs = {
-      enable = true; };
+    signing.key = "7696B78D091E7F02";
     extraConfig = {
+      commit.gpgsign = true;
       init.defaultBranch = "main";
       core = { 
 	    editor = "vim";
         autocrlf = "input";
       };
-      commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
 
+    };
+    lfs = {
+      enable = true; 
     };
   };
 
@@ -37,10 +38,15 @@ exec fish
   };
   fish = {
     enable = true;
+    plugins = with pkgs.fishPlugins; [
+      { name = "autopair"; src = autopair.src; }
+    ];
     shellInit = ''
     '';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
+      set -U USE_GKE_GCLOUD_AUTH_PLUGIN True
+      set -U GCLOUD_ACCOUNT "$USER@paloaltonetworks.com"
 
       alias n="nvim"
       alias hms="home-manager switch"
