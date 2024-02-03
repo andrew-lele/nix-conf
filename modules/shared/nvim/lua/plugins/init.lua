@@ -295,6 +295,14 @@ local default_plugins = {
     "towolf/vim-helm",
     ft = 'helm'
   },
+  {
+    "tpope/vim-fugitive",
+    lazy = false,
+  },
+  {
+    "towolf/vim-helm",
+    ft = 'helm'
+  },
 }
 
 local config = require("core.utils").load_config()

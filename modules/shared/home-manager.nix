@@ -13,7 +13,7 @@ in
     userEmail = email;
     signing.key = "7696B78D091E7F02";
     extraConfig = {
-      # commit.gpgsign = true;
+      commit.gpgsign = true;
       init.defaultBranch = "main";
       core = { 
 	    editor = "vim";
@@ -39,10 +39,15 @@ exec fish
     plugins = with pkgs.fishPlugins; [
     ];
     enable = true;
+    plugins = with pkgs.fishPlugins; [
+      { name = "autopair"; src = autopair.src; }
+    ];
     shellInit = ''
     '';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
+      set -U USE_GKE_GCLOUD_AUTH_PLUGIN True
+      set -U GCLOUD_ACCOUNT "$USER@paloaltonetworks.com"
 
       alias n="nvim"
       alias hms="home-manager switch"
@@ -194,11 +199,6 @@ exec fish
       import = [ "/Users/${user}/.config/alacritty/themes/gruvbox_material_medium_dark.toml" ];
       shell = {
         program = "zsh";
-<<<<<<< HEAD
-=======
-        # program = "/Users/${user}/.nix-profile/bin/fish";
-        # args = [ "-l" ] ;
->>>>>>> 24eaa36 (fix: alacritty, add some gitsigns. remove nerd fonts)
       };
       window = {
         option_as_alt = "OnlyLeft";
