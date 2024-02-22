@@ -58,6 +58,16 @@ let user = "andle"; in
 #    StandardOutPath = "/tmp/emacs.out.log";
 #  };
 
+  security = {
+    pki = {
+      certificateFiles = [
+        "/etc/ssl/certs/domain-ca.crt"
+        "/etc/ssl/certs/internal-ca.crt"
+      ];
+    };
+  };
+  # security.pki.installCACerts = false;
+
   system = {
     stateVersion = 4;
 

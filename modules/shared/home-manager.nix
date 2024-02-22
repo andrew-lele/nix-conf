@@ -46,6 +46,10 @@ exec fish
       set fish_greeting # Disable greeting
       set -U USE_GKE_GCLOUD_AUTH_PLUGIN True
       set -U GCLOUD_ACCOUNT "$USER@paloaltonetworks.com"
+      set -U -x USER_CODE_PATH "/Users/andle/code"
+      set -U -x OW_DEV_USERNAME "andle"
+      set -U -x OPENSSL_CONF ~/openssl.conf
+      set -U -x NODE_EXTRA_CA_CERTS "$HOME/certs/domain-ca.crt"
 
       alias n="nvim"
       alias hms="home-manager switch"
@@ -56,8 +60,11 @@ exec fish
       alias k="kubectl"
       alias untt="helm dep update && ~/.nix-profile/helm-unittest/untt ."
       alias mfa="~/scripts/mfa.sh"
+      alias gp='gcloud compute ssh user-proxy --ssh-flag="-D 1081" --project pan-dev-u42'
+      alias gpp='gcloud compute ssh user-proxy --ssh-flag="-D 1080"'
       
       # Goes at the end:
+      direnv hook fish | source
       starship init fish | source
 
     '';
@@ -253,7 +260,7 @@ exec fish
         impure_msg = "[impure shell](bold red)";
         pure_msg = "[pure shell](bold green)";
         unknown_msg = "[unknown shell](bold yellow)";
-        format = "via [☃️ $state( \($name\))](bold blue) ";
+        format = " [   $state( \($name\))](bold blue) ";
       };
       rust = {
         disabled = false;
