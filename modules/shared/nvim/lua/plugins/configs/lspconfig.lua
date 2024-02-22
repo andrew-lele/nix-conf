@@ -67,7 +67,6 @@ local servers = {
   "rust_analyzer",
   "tsserver",
   "taplo",
-  "yamlls",
 }
 
 for _, lsp in ipairs(servers) do
@@ -77,6 +76,15 @@ for _, lsp in ipairs(servers) do
   }
 end
 
+lspconfig.yamlls.setup {
+  settings = {
+    redhat = {
+      telemetry = {
+        enabled = false
+      }
+    }
+  }
+}
 lspconfig.helm_ls.setup {
   settings = {
     ['helm-ls'] = {

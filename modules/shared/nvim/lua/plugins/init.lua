@@ -252,7 +252,7 @@ local default_plugins = {
   {
     "stevearc/conform.nvim",
     config = function()
-      require "config.conform"
+      require "plugins.configs.conform"
     end,
     event = "BufWritePre"
   },
@@ -283,20 +283,8 @@ local default_plugins = {
         require("nvim-surround").setup()
     end
   },
-  -- {
-  --   'mrcjkb/rustaceanvim',
-  --   version = '^4', -- Recommended
-  --   config = function()
-  --     require "plugins.configs.rustaceanvim"
-  --   end,
-  --   ft = { 'rust' },
-  -- },
  {
     "mfussenegger/nvim-dap",
-    ft = { 'rust' },
-  },
- {
-    "sakhnik/nvim-gdb",
     ft = { 'rust' },
   },
 }

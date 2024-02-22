@@ -22,7 +22,11 @@ with pkgs; [
   kubernetes-helmPlugins.helm-unittest
   rustup
   starship
-  
+  lazygit
+  devspace
+  direnv
+  podman
+  qemu
 
   # Encryption and security tools
   age
@@ -54,4 +58,6 @@ with pkgs; [
     gke-gcloud-auth-plugin
   ]))
   hugo
+  crystal
+  helm-docs
 ]
