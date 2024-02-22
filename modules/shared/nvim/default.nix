@@ -8,7 +8,6 @@
     nil
     rust-analyzer
     helm-ls
-    yaml-language-server
     # Telescope
     ripgrep
     yamlfmt
@@ -68,6 +67,8 @@
         which-key-nvim
         vim-fugitive
         vim-helm
+        neogit
+        nvim-surround
         { name = "LuaSnip"; path = luasnip; }
         { name = "catppuccin"; path = catppuccin-nvim; }
         { name = "mini.ai"; path = mini-nvim; }
