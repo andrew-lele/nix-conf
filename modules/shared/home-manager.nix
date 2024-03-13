@@ -37,15 +37,10 @@ exec fish
   };
   fish = {
     enable = true;
-    plugins = with pkgs.fishPlugins; [
-      { name = "autopair"; src = autopair.src; }
-    ];
     shellInit = ''
     '';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
-      set -U USE_GKE_GCLOUD_AUTH_PLUGIN True
-      set -U GCLOUD_ACCOUNT "$USER@paloaltonetworks.com"
 
       alias n="nvim"
       alias hms="home-manager switch"
