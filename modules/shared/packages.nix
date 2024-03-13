@@ -19,6 +19,8 @@ with pkgs; [
   direnv
   podman
   qemu
+  yq-go
+  # vscode-extensions.vadimcn.vscode-lldb.adapter
 
   # Encryption and security tools
   age
@@ -47,4 +49,6 @@ with pkgs; [
   hugo
   crystal
   helm-docs
+  jetbrains.webstorm
+
 ]

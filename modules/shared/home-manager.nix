@@ -7,7 +7,7 @@ in
 {
   # Shared shell configuration
   git = {
-    enable = false;
+    enable = true;
     ignores = [ "*.swp" ];
     userName = name;
     userEmail = email;
