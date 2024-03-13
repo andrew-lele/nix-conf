@@ -367,6 +367,12 @@ M.nvterm = {
       "Toggle vertical term",
     },
 
+    ["<A-g>"] = {
+      function()
+        require("nvterm.terminal").send("lazygit", "float")
+      end,
+      "Toggle lazygit term"
+    },
     -- new
     -- ["<leader>h"] = {
     --   function()

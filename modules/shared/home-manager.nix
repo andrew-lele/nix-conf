@@ -7,13 +7,11 @@ in
 {
   # Shared shell configuration
   git = {
-    enable = true;
+    enable = false;
     ignores = [ "*.swp" ];
     userName = name;
     userEmail = email;
-    signing.key = "FF8F4C5D2A2912B8";
-    lfs = {
-      enable = true; };
+    signing.key = "7696B78D091E7F02";
     extraConfig = {
       init.defaultBranch = "main";
       core = { 
@@ -24,6 +22,9 @@ in
       pull.rebase = true;
       rebase.autoStash = true;
 
+    };
+    lfs = {
+      enable = true; 
     };
   };
 
@@ -44,8 +45,6 @@ exec fish
     '';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
-      set -U USE_GKE_GCLOUD_AUTH_PLUGIN True
-      set -U GCLOUD_ACCOUNT "$USER@paloaltonetworks.com"
 
       alias n="nvim"
       alias hms="home-manager switch"
@@ -59,6 +58,7 @@ exec fish
       
       # Goes at the end:
       starship init fish | source
+      direnv hook fish | source
 
     '';
     
@@ -249,7 +249,7 @@ exec fish
         impure_msg = "[impure shell](bold red)";
         pure_msg = "[pure shell](bold green)";
         unknown_msg = "[unknown shell](bold yellow)";
-        format = "via [☃️ $state( \($name\))](bold blue) ";
+        format = " [   $state( \($name\))](bold blue) ";
       };
       rust = {
         disabled = false;
