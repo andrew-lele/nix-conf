@@ -57,6 +57,7 @@ exec fish
       alias mfa="~/scripts/mfa.sh"
       
       # Goes at the end:
+      starship init fish | source
       direnv hook fish | source
 
     '';
