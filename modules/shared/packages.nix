@@ -14,7 +14,13 @@ with pkgs; [
   kubernetes-helmPlugins.helm-unittest
   rustup
   starship
-  
+  lazygit
+  devspace
+  direnv
+  podman
+  qemu
+  yq-go
+  # vscode-extensions.vadimcn.vscode-lldb.adapter
 
   # Encryption and security tools
   age
@@ -41,4 +47,8 @@ with pkgs; [
     gke-gcloud-auth-plugin
   ]))
   hugo
+  crystal
+  helm-docs
+  jetbrains.webstorm
+
 ]
