@@ -254,6 +254,7 @@ local default_plugins = {
     config = function()
       require "config.conform"
     end,
+    event = "BufWritePre"
   },
   {
     "tpope/vim-fugitive",
@@ -262,6 +263,41 @@ local default_plugins = {
   {
     "towolf/vim-helm",
     ft = 'helm'
+  },
+  {
+    "NeogitOrg/neogit",
+    dependencies = {
+      "nvim-lua/plenary.nvim",         -- required
+      "nvim-telescope/telescope.nvim", -- optional
+    },
+    config = function()
+      require "plugins.configs.neogit"
+    end,
+    event = "VeryLazy"
+  },
+  {
+    "kylechui/nvim-surround",
+    version = "*", -- Use for stability; omit to use `main` branch for the latest features
+    event = "VeryLazy",
+    config = function()
+        require("nvim-surround").setup()
+    end
+  },
+  -- {
+  --   'mrcjkb/rustaceanvim',
+  --   version = '^4', -- Recommended
+  --   config = function()
+  --     require "plugins.configs.rustaceanvim"
+  --   end,
+  --   ft = { 'rust' },
+  -- },
+ {
+    "mfussenegger/nvim-dap",
+    ft = { 'rust' },
+  },
+ {
+    "sakhnik/nvim-gdb",
+    ft = { 'rust' },
   },
 }
 
