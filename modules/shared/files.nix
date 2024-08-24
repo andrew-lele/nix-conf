@@ -1,7 +1,8 @@
 { pkgs, config, ... }:
 
 let
- githubPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAII1KyvVCIx66SNg5BEmKsJLN/vk5uWndtt6ayVzFs4Fw le@mac.self";
+ githubPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFIYMrKpYQnWTnYdRj1TssL+otUWu8358ZcbbTJItbt le@mac.self";
+
  githubSigningKey = ''
  -----BEGIN PGP PUBLIC KEY BLOCK-----
 

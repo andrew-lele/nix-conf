@@ -22,16 +22,17 @@ let user = "le"; in
       symlink = false;
       path = "/Users/${user}/.ssh/id_github";
       file =  "${secrets}/github-ssh-key.age";
-      mode = "600";
+      mode = "400";
       owner = "${user}";
+      group = "wheel";
     };
-
     "github-signing-key" = {
       symlink = false;
       path = "/Users/${user}/.ssh/pgp_github.pgp";
       file =  "${secrets}/github-signing-key.age";
-      mode = "600";
+      mode = "400";
       owner = "${user}";
+      group = "wheel";
     };
   };
 }

@@ -5,37 +5,27 @@ let user = "le";
 {
   imports = [
     ../../modules/nixos/secrets.nix
-    ../../modules/nixos/disk-config.nix
     ../../modules/shared
     ../../modules/shared/cachix
+
+    ./hardware-configuration.nix 
+    ./zfs.nix
     agenix.nixosModules.default
   ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot = {
-    loader = {
-      systemd-boot = {
-        enable = true;
-        configurationLimit = 42;
-      };
-      efi.canTouchEfiVariables = true;
-    };
-    initrd.availableKernelModules = [ "xhci_pci" "ahci" "nvme" "usbhid" "usb_storage" "sd_mod" ];
-    kernelPackages = pkgs.linuxPackages_latest;
-    kernelModules = [ "uinput" ];
+  # Backup user is always good to have :)
+  users.users.andrew = {
+    isNormalUser  = true;
+    home  = "/home/andrew";
+    description  = "the HAND";
+    extraGroups  = [ "wheel" "networkmanager" ];
+    openssh.authorizedKeys.keys  = [ "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCul+vpn+aybmohQMZ9IuRoZsqJHRyJ42UahkzwqQbgkNFnrnuXVx0vIXLW2il0jORFb+i5j337Ps7A+XkFUccH3UyqIWiUl62N5Bn37uLeP37lmtcAyTQ2avLG052lWY8h+yJUezRd9wCSHj7GBn0pyY8f8t7CbqwzUDLUbG4U1yQhXdnG/Agrcm7BZsa0GfqRqH+kqYVfESritBQpJvB6IkPP1dG8iFOrzMoTQvvmOC5937QHpUOIwO+4Vu9cldWBhtJT+XcW5SYw8KRyihwTUpvPIfqAzx/HjtxcuwJmN+JRBK5P/Vy36kK6ip882PnNvlsGrqUYxMM/d/lRZV23YsGHSAZPjK0pykJTB2NyTaJiNit6gCzj8za18ak4c7dTYsy8fhifZ7zh/u7H4e+a6XPG5KNHs0Hx3D+7qE1da4dWXXnvxksDwRIHRTCFmgHdxg7A3Q056T4bOzdGZDFcRHw2CmXW+uAD2kwKqbvP0sm35H36qbJBwBJI0Q0Ry7c= le@mac.self" ];
   };
 
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  # The global useDHCP flag is deprecated, therefore explicitly set to false here.
-  # Per-interface useDHCP will be mandatory in the future, so this generated config
-  # replicates the default behaviour.
-  networking = {
-    hostName = "%HOST%"; # Define your hostname.
-    useDHCP = false;
-    interfaces."%INTERFACE%".useDHCP = true;
-  };
+  networking.hostName = "nixos"; # Define your hostname.
 
   # Turn on flag for proprietary software
   nix = {
@@ -59,73 +49,59 @@ let user = "le";
   };
 
   services = {
-    xserver = {
-      enable = true;
-
-      # Uncomment these for AMD or Nvidia GPU
-      # boot.initrd.kernelModules = [ "amdgpu" ];
-      # services.xserver.videoDrivers = [ "amdgpu" ];
-      # services.xserver.videoDrivers = [ "nvidia" ];
-
-      # Comment this for AMD GPU
-      # This helps fix tearing of windows for Nvidia cards
-      # services.xserver.screenSection = ''
-      #   Option       "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-      #   Option       "AllowIndirectGLXProtocol" "off"
-      #   Option       "TripleBuffer" "on"
-      # '';
-
-      # LightDM Display Manager
-
-      # Turn Caps Lock into Ctrl
-      layout = "us";
-      xkbOptions = "ctrl:nocaps";
-
-      # Better support for general peripherals
-      libinput.enable = true;
-    };
+    # xserver = {
+    #   enable = true;
+    #
+    #   # Uncomment these for AMD or Nvidia GPU
+    #   # boot.initrd.kernelModules = [ "amdgpu" ];
+    #   # services.xserver.videoDrivers = [ "amdgpu" ];
+    #   # services.xserver.videoDrivers = [ "nvidia" ];
+    #
+    #   # Comment this for AMD GPU
+    #   # This helps fix tearing of windows for Nvidia cards
+    #   # services.xserver.screenSection = ''
+    #   #   Option       "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
+    #   #   Option       "AllowIndirectGLXProtocol" "off"
+    #   #   Option       "TripleBuffer" "on"
+    #   # '';
+    #
+    #   # LightDM Display Manager
+    #
+    #   # Turn Caps Lock into Ctrl
+    #   layout = "us";
+    #   xkbOptions = "ctrl:nocaps";
+    #
+    #   # Better support for general peripherals
+    #   libinput.enable = true;
+    # };
 
     # Let's be able to SSH into this machine
     openssh.enable = true;
 
     # Sync state between machines
     # Sync state between machines
-    syncthing = {
-      enable = true;
-      openDefaultPorts = true;
-      dataDir = "/home/${user}/.local/share/syncthing";
-      configDir = "/home/${user}/.config/syncthing";
-      user = "${user}";
-      group = "users";
-      guiAddress = "127.0.0.1:8384";
-      overrideFolders = true;
-      overrideDevices = true;
+    # syncthing = {
+    #   enable = true;
+    #   openDefaultPorts = true;
+    #   dataDir = "/home/${user}/.local/share/syncthing";
+    #   configDir = "/home/${user}/.config/syncthing";
+    #   user = "${user}";
+    #   group = "users";
+    #   guiAddress = "127.0.0.1:8384";
+    #   overrideFolders = true;
+    #   overrideDevices = true;
+    #
+    #   settings = {
+    #     devices = {};
+    #     options.globalAnnounceEnabled = false; # Only sync on LAN
+    #   };
+    # };
 
-      settings = {
-        devices = {};
-        options.globalAnnounceEnabled = false; # Only sync on LAN
-      };
-    };
-
-    gvfs.enable = true; # Mount, trash, and other functionalities
-  };
-
-  # Enable CUPS to print documents
-  # services.printing.enable = true;
-  # services.printing.drivers = [ pkgs.brlaser ]; # Brother printer driver
-
-  # Enable sound
-  # sound.enable = true;
-  # hardware.pulseaudio.enable = true;
-
-  # Video support
-  hardware = {
-    opengl.enable = true;
-    # nvidia.modesetting.enable = true;
+    # gvfs.enable = true; # Mount, trash, and other functionalities
   };
 
 
-  # It's me, it's you, it's everyone
+  # explicitly define my user.. for now...
   users.users = {
     ${user} = {
       isNormalUser = true;
@@ -156,21 +132,22 @@ let user = "le";
     }];
   };
 
-  fonts.packages = with pkgs; [
-    dejavu_fonts
-    emacs-all-the-icons-fonts
-    feather-font # from overlay
-    jetbrains-mono
-    font-awesome
-    noto-fonts
-    noto-fonts-emoji
-  ];
+  # fonts.packages = with pkgs; [
+  #   dejavu_fonts
+  #   emacs-all-the-icons-fonts
+  #   feather-font # from overlay
+  #   jetbrains-mono
+  #   font-awesome
+  #   noto-fonts
+  #   noto-fonts-emoji
+  # ];
 
   environment.systemPackages = with pkgs; [
     agenix.packages."${pkgs.system}".default # "x86_64-linux"
+    vim
     gitAndTools.gitFull
     inetutils
   ];
 
-  system.stateVersion = "21.05"; # Don't change this
+  system.stateVersion = "24.05"; # Don't change this
 }
