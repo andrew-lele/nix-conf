@@ -7,11 +7,11 @@ in
 {
   # Shared shell configuration
   git = {
-    enable = false;
+    enable = true;
     ignores = [ "*.swp" ];
     userName = name;
     userEmail = email;
-    signing.key = "7696B78D091E7F02";
+    signing.key = "FF8F4C5D2A2912B8";
     extraConfig = {
       init.defaultBranch = "main";
       core = { 

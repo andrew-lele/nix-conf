@@ -1,7 +1,6 @@
 { pkgs, config, ... }:
 
 let
- githubPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFIYMrKpYQnWTnYdRj1TssL+otUWu8358ZcbbTJItbt le@mac.self";
 
  githubSigningKey = ''
  -----BEGIN PGP PUBLIC KEY BLOCK-----
@@ -23,9 +22,6 @@ ymIQPSZx612LNgsO
 in
 {
 
-  ".ssh/id_github.pub" = {
-    text = githubPublicKey;
-  };
   ".ssh/pgp_github.pub" = {
     text = githubSigningKey;
   };
