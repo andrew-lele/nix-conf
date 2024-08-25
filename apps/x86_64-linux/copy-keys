@@ -27,7 +27,7 @@ mount_usb() {
 }
 
 setup_ssh_directory() {
-  export SSH_DIR=/root/.ssh
+  export SSH_DIR=/home/le/.ssh
   mkdir -p $SSH_DIR
 }
 
