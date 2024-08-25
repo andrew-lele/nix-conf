@@ -56,7 +56,6 @@ exec fish
       alias untt="helm dep update && ~/.nix-profile/helm-unittest/untt ."
       alias mfa="~/scripts/mfa.sh"
 
-      ssh-add ~/.ssh/id_github
       
       # Goes at the end:
       starship init fish | source
