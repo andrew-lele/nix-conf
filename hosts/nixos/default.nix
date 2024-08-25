@@ -1,14 +1,15 @@
 { config, inputs, pkgs, agenix, ... }:
 
 let user = "le";
-    keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOk8iAnIaa1deoc7jw8YACPNVka1ZFJxhnU4G74TmS+p" ]; in
+    keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFIYMrKpYQnWTnYdRj1TssL+otUWu8358ZcbbTJItbt le@mac.self
+"]; in
 {
   imports = [
     ../../modules/nixos/secrets.nix
     ../../modules/shared
     ../../modules/shared/cachix
 
-    ./hardware-configuration.nix 
+    ./hardware-config-reference.nix 
     ./zfs.nix
     agenix.nixosModules.default
   ];
@@ -30,7 +31,7 @@ let user = "le";
   # Turn on flag for proprietary software
   nix = {
     nixPath = [ "nixos-config=/home/${user}/.local/share/src/nixos-config:/etc/nixos" ];
-    settings.allowed-users = [ "${user}" ];
+    settings.allowed-users = [ "${user}", le, root ];
     package = pkgs.nixUnstable;
     extraOptions = ''
       experimental-features = nix-command flakes
@@ -77,6 +78,8 @@ let user = "le";
 
     # Let's be able to SSH into this machine
     openssh.enable = true;
+    networking.firewall.enable = false;
+  
 
     # Sync state between machines
     # Sync state between machines
@@ -110,10 +113,6 @@ let user = "le";
         "networkmanager"
       ];
       shell = pkgs.fish;
-      openssh.authorizedKeys.keys = keys;
-    };
-
-    root = {
       openssh.authorizedKeys.keys = keys;
     };
   };

@@ -63,7 +63,6 @@ change_ownership() {
 
 trap unmount_usb EXIT
 
-setup_ssh_directory
 mount_usb
 copy_keys
 set_keys
