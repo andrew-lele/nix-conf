@@ -16,7 +16,7 @@
     golangci-lint
     golangci-lint-langserver
     shellcheck
-    nixpkgs-fmt
+    nixfmt
   ];
 
   plugins = with pkgs.vimPlugins; [
@@ -96,7 +96,7 @@ end
 
 require("core.utils").load_mappings()
 
-dofile(vim.g.base46_cache .. "defaults")
+-- dofile(vim.g.base46_cache .. "defaults")
 vim.opt.rtp:prepend("${lazyPath}")
 require "plugins"
       '';
