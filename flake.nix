@@ -23,6 +23,7 @@
       flake = false;
     };
     mac-app-util.url = "github:hraban/mac-app-util";
+    alacritty-theme.url = "github:alexghr/alacritty-theme.nix";
   };
 
   outputs =
@@ -36,6 +37,7 @@
       homebrew-core,
       homebrew-cask,
       mac-app-util,
+      alacritty-theme,
     }:
     let
       user = "andle";
@@ -88,6 +90,13 @@
       # $ darwin-rebuild build --flake .#M-TDL0Y9H4T5
       darwinConfigurations."M-TDL0Y9H4T5" = nix-darwin.lib.darwinSystem {
         modules = [
+          # overlays
+          (
+            { config, pkgs, ... }:
+            {
+              nixpkgs.overlays = [ alacritty-theme.overlays.default ];
+            }
+          )
           configuration
           home-manager.darwinModules.home-manager
           nix-homebrew.darwinModules.nix-homebrew

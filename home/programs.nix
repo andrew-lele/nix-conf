@@ -14,7 +14,7 @@ in
 
   # Shared shell configuration
   git = {
-    enable = true;
+    enable = false;
     ignores = [ "*.swp" ];
     userName = "andle";
     userEmail = email;
@@ -73,7 +73,7 @@ in
     '';
 
   };
-  neovim = import ./nvim/lazy.nix { inherit config lib pkgs; };
+  neovim = import ../nvim/lazy.nix { inherit config lib pkgs; };
   vim = {
     enable = true;
     plugins = with pkgs.vimPlugins; [
@@ -211,7 +211,8 @@ in
 
       # title = "Terminal";
       general = {
-        import = [ "${builtins.toString ./.}/alacritty-theme/themes/everforest_dark.toml" ];
+        # import = [ "${builtins.toString ../.}/alacritty-theme/themes/everforest_dark.toml" ];
+        import = [ pkgs.alacritty-theme.everforest_dark ];
       };
       terminal = {
         shell = {

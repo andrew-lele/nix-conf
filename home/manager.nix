@@ -8,8 +8,8 @@
 
 let
   user = "andle";
+  additionalFiles = import ./files.nix { inherit user config pkgs; };
 in
-#   additionalFiles = import ./files.nix { inherit user config pkgs; };
 {
   #  imports = [
   #   ./dock.nix
@@ -56,11 +56,11 @@ in
         home = {
           enableNixpkgsReleaseCheck = false;
           packages = pkgs.callPackage ./packages.nix { };
-          #        file = lib.mkMerge [
-          #          sharedFiles
-          #          additionalFiles
-          #          # { "emacs-launcher.command".source = myEmacsLauncher; }
-          #        ];
+          file = lib.mkMerge [
+            #          sharedFiles
+            additionalFiles
+            #          # { "emacs-launcher.command".source = myEmacsLauncher; }
+          ];
           stateVersion = "24.11";
           sessionVariables = {
             KUBECONFIG = "~/.kube/config";
@@ -95,9 +95,9 @@ in
           "${parsers}/parser";
 
         # Normal LazyVim config here, see https://github.com/LazyVim/starter/tree/main/lua
-        xdg.configFile."nvim/lua".source = ./nvim/lua;
+        xdg.configFile."nvim/lua".source = ../nvim/lua;
 
-        programs = { } // import ./home-programs.nix { inherit config pkgs lib; };
+        programs = { } // import ./programs.nix { inherit config pkgs lib; };
 
         # Marked broken Oct 20, 2022 check later to remove this
         # https://github.com/nix-community/home-manager/issues/3344

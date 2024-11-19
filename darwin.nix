@@ -1,4 +1,8 @@
-{ config, pkgs, ... }:
+{
+  config,
+  pkgs,
+  ...
+}:
 
 let
   user = "andle";
@@ -7,7 +11,7 @@ in
 {
 
   imports = [
-    ./home-manager.nix
+    ./home/manager.nix
   ];
 
   # Auto upgrade nix package and the daemon service.
@@ -17,7 +21,7 @@ in
   system.checks.verifyNixPath = false;
 
   # Load configuration that is shared across systems
-  environment.systemPackages = (import ./packages.nix { inherit pkgs; });
+  environment.systemPackages = (import ./home/packages.nix { inherit pkgs; });
   environment.pathsToLink = [ "/share/zsh" ];
 
   system = {
