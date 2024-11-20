@@ -1,6 +1,7 @@
 { pkgs }:
 
-with pkgs; [
+with pkgs;
+[
   # General packages for development and system management
   alacritty
   bash-completion
@@ -23,14 +24,19 @@ with pkgs; [
   lazygit
   devspace
   direnv
+  difftastic
+  oh-my-zsh
+  thefuck
   podman
   go
 
   fd
   meslo-lgs-nf
-  (nerdfonts.override { fonts = [ 
-    "JetBrainsMono"
-  ];})
+  (nerdfonts.override {
+    fonts = [
+      "JetBrainsMono"
+    ];
+  })
   powerline-symbols
   powerline-fonts
   # Text and terminal utilities
@@ -41,10 +47,14 @@ with pkgs; [
   ripgrep
   tree
   unzip
-#work
+  #work
   # google-cloud-sdk
-  (google-cloud-sdk.withExtraComponents( with google-cloud-sdk.components; [
-    gke-gcloud-auth-plugin
-  ]))
+  (google-cloud-sdk.withExtraComponents (
+    with google-cloud-sdk.components;
+    [
+      gke-gcloud-auth-plugin
+    ]
+  ))
   helm-docs
+  kubectx
 ]

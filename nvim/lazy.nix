@@ -20,6 +20,7 @@
     markdownlint-cli2
     nixfmt-rfc-style
     nil
+    yaml-language-server
   ];
 
   plugins = with pkgs.vimPlugins; [

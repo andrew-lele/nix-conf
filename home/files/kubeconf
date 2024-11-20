@@ -1,0 +1,66 @@
+apiVersion: v1
+kind: Config
+current-context: dev
+preferences: {}
+clusters:
+- cluster:
+    server: https://kube-api-proxy.dev.unit42.lan
+    insecure-skip-tls-verify: true
+  name: gke_pan-dev-u42_us-west1_cluster-private-us-west1
+- cluster:
+    insecure-skip-tls-verify: true
+    server: https://kube-api-proxy.unit42.lan
+  name: gke_pan-prod-u42_us-west1_cluster-us-west1
+- cluster:
+    insecure-skip-tls-verify: true
+    server: https://kube-api-proxy.qa.unit42.lan
+  name: gke_pan-stg-u42_us-west1_cluster-us-west1
+contexts:
+- context:
+    cluster: gke_pan-dev-u42_us-west1_cluster-private-us-west1
+    namespace: andle-dev
+    user: gke_pan-dev-u42_us-west1_cluster-private-us-west1
+  name: dev
+- context:
+    cluster: gke_pan-prod-u42_us-west1_cluster-us-west1
+    user: gke_pan-prod-u42_us-west1_cluster-us-west1
+  name: prod
+- context:
+    cluster: gke_pan-stg-u42_us-west1_cluster-us-west1
+    namespace: andle-dev
+    user: gke_pan-stg-u42_us-west1_cluster-us-west1
+  name: stag
+users:
+- name: gke_pan-dev-u42_us-west1_cluster-private-us-west1
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args: null
+      command: gke-gcloud-auth-plugin
+      env: null
+      installHint: Install gke-gcloud-auth-plugin for use with kubectl by following
+        https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+      interactiveMode: IfAvailable
+      provideClusterInfo: true
+- name: gke_pan-prod-u42_us-west1_cluster-us-west1
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args: null
+      command: gke-gcloud-auth-plugin
+      env: null
+      installHint: Install gke-gcloud-auth-plugin for use with kubectl by following
+        https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+      interactiveMode: IfAvailable
+      provideClusterInfo: true
+- name: gke_pan-stg-u42_us-west1_cluster-us-west1
+  user:
+    exec:
+      apiVersion: client.authentication.k8s.io/v1beta1
+      args: null
+      command: gke-gcloud-auth-plugin
+      env: null
+      installHint: Install gke-gcloud-auth-plugin for use with kubectl by following
+        https://cloud.google.com/blog/products/containers-kubernetes/kubectl-auth-changes-in-gke
+      interactiveMode: IfAvailable
+      provideClusterInfo: true

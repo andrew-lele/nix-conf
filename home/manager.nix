@@ -21,12 +21,11 @@ in
     home = "/Users/${user}";
     isHidden = false;
     shell = pkgs.zsh;
-    # shell = pkgs.fish;
   };
 
   homebrew = {
     enable = true;
-    #    casks = pkgs.callPackage ./casks.nix {};
+    casks = pkgs.callPackage ./casks.nix { };
 
     # These app IDs are from using the mas CLI app
     # mas = mac app store
@@ -54,6 +53,11 @@ in
       }:
       {
         home = {
+          shellAliases = {
+            n = "nvim";
+            nrb = "darwin-rebuild switch --flake ~/nix-conf";
+            k = "kubectl";
+          };
           enableNixpkgsReleaseCheck = false;
           packages = pkgs.callPackage ./packages.nix { };
           file = lib.mkMerge [
@@ -63,9 +67,10 @@ in
           ];
           stateVersion = "24.11";
           sessionVariables = {
-            KUBECONFIG = "~/.kube/config";
+            USE_GKE_GCLOUD_AUTH_PLUGIN = "true";
           };
         };
+        xdg.configFile."amethyst/amethyst.yml".source = ./files/amethyst.yaml;
         xdg.configFile."nvim/parser".source =
           let
             parsers = pkgs.symlinkJoin {
@@ -99,9 +104,6 @@ in
 
         programs = { } // import ./programs.nix { inherit config pkgs lib; };
 
-        # Marked broken Oct 20, 2022 check later to remove this
-        # https://github.com/nix-community/home-manager/issues/3344
-        manual.manpages.enable = false;
       };
   };
 

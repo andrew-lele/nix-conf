@@ -11,6 +11,8 @@ let
   xdg_stateHome = "${config.users.users.${user}.home}/.local/state";
 in
 {
+
+  "${config.users.users.${user}.home}/.kube/config".source = ./files/kubeconf;
   "${config.users.users.${user}.home}/.gitconfig" = {
     text = ''
       [user]
@@ -23,7 +25,18 @@ in
       	editor = nvim
       	pager = delta
       [diff]
-        external = difft diff
+        external = difft
+        tool = difftastic
+      [difftool "difftastic"]
+        # See `man git-difftool` for a description of MERGED, LOCAL and REMOTE.
+        cmd = difft "$MERGED" "$LOCAL" "abcdef1" "100644" "$REMOTE" "abcdef2" "100644"
+      [difftool]
+        # Run the difftool immediately, don't ask 'are you sure' each time.
+        prompt = false
+      [pager]
+        # Use a pager if the difftool output is larger than one screenful,
+        # consistent with the behaviour of `git diff`.
+        difftool = true
       [gitlab]
       	user = andle
       	token = token
@@ -232,32 +245,8 @@ in
       	smudge = git-lfs smudge -- %f
       	process = git-lfs filter-process
       	required = true
+      [push]
+        autoSetupRemote = true
     '';
   };
-
-  # Raycast script so that "Run Emacs" is available and uses Emacs daemon
-  # "${xdg_dataHome}/bin/emacsclient" = {
-  #   executable = true;
-  #   text = ''
-  #     #!/bin/zsh
-  #     #
-  #     # Required parameters:
-  #     # @raycast.schemaVersion 1
-  #     # @raycast.title Run Emacs
-  #     # @raycast.mode silent
-  #     #
-  #     # Optional parameters:
-  #     # @raycast.packageName Emacs
-  #     # @raycast.icon ${xdg_dataHome}/img/icons/Emacs.icns
-  #     # @raycast.iconDark ${xdg_dataHome}/img/icons/Emacs.icns
-  #
-  #     if [[ $1 = "-t" ]]; then
-  #       # Terminal mode
-  #       ${pkgs.emacs}/bin/emacsclient -t $@
-  #     else
-  #       # GUI mode
-  #       ${pkgs.emacs}/bin/emacsclient -c -n $@
-  #     fi
-  #   '';
-  # };
 }

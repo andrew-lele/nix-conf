@@ -1,0 +1,4 @@
+window-margins: true
+window-margin-size: 5
+floating:
+  - Zoom.app

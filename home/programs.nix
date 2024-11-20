@@ -38,9 +38,22 @@ in
     enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
-    #    initExtraBeforeCompInit = ''
-    #exec fish
-    #    '';
+    syntaxHighlighting.enable = true;
+    oh-my-zsh = {
+      enable = true;
+      plugins = [
+        "git"
+        "golang"
+        "thefuck"
+        "direnv"
+        "starship"
+      ];
+    };
+    initExtraBeforeCompInit = ''
+      set -a
+      source ~/.config/goods.env
+      set +a
+    '';
   };
   fish = {
     enable = false;
@@ -68,7 +81,6 @@ in
 
       # Goes at the end:
       starship init fish | source
-      direnv hook fish | source
 
     '';
 
@@ -249,17 +261,21 @@ in
     settings = {
       add_newline = false;
       format = ''
-        󰶞 $directory$nix_shell$git_status$kubernetes$helm$rust$battery
-        󱅾   
+        󰶞 $directory$git_branch$git_status$kubernetes󰿟󰿟 $helm$rust$golang$battery
+        󱅾 $nix_shell 
       '';
       directory = {
         disabled = false;
         format = " ~ [$path]($style)[$read_only]($read_only_style) ";
       };
+      git_branch = {
+        disabled = false;
+        symbol = "󰐅 ";
+      };
       git_status = {
         disabled = false;
         ahead = "⇕⇡$\{ahead_count}⇣$\{behind_count}";
-        behind = "⇣$\{count}";
+        behind = "⇣$\{count}";
       };
       kubernetes = {
         disabled = false;
@@ -267,14 +283,17 @@ in
       };
       nix_shell = {
         disabled = false;
-        impure_msg = "[impure shell](bold red)";
-        pure_msg = "[pure shell](bold green)";
-        unknown_msg = "[unknown shell](bold yellow)";
-        format = " [   $state( \($name\))](bold blue) ";
+        impure_msg = "[󱄅 ](bold red)";
+        pure_msg = "[󱄅 ](bold green)";
+        unknown_msg = "[󱄅 ](bold yellow)";
+        format = " [$state(\($name\))](bold blue) ";
       };
       rust = {
         disabled = false;
         format = "[ $version](red bold)";
+      };
+      golang = {
+        disabled = false;
       };
       helm = {
         disabled = false;
