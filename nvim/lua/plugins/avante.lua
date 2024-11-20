@@ -13,7 +13,7 @@ local parse_messages = function(opts)
 	return messages
 end
 
-local parse_response = function(data_stream, event_state, opts)
+local parse_response_data = function(data_stream, event_state, opts)
 	if event_state == "done" then
 		opts.on_complete()
 		return
@@ -42,6 +42,7 @@ return {
 			-- add any opts here
 			provider = "cody",
 			vendors = {
+				---@type AvanteProvider
 				["cody"] = {
 					endpoint = os.getenv("SRC_ENDPOINT"),
 					model = "google::2024-06-20::claude-3-5-sonnet-45k-Tokens",
@@ -77,7 +78,7 @@ return {
 							}, {}),
 						}
 					end,
-					parse_response = parse_response,
+					parse_response_data = parse_response_data,
 					parse_messages = parse_messages,
 				},
 			},
