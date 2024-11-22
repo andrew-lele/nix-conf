@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ user, pkgs, config, ... }:
 
 let
 
@@ -19,17 +19,32 @@ ymIQPSZx612LNgsO
 -----END PGP PUBLIC KEY BLOCK-----
 '';
 
+  xdg_configHome = "${config.users.users.${user}.home}/.config";
+  # xdg_dataHome   = "${config.users.users.${user}.home}/.local/share";
+  # xdg_stateHome  = "${config.users.users.${user}.home}/.local/state";
 in
 {
 
   ".ssh/pgp_github.pub" = {
     text = githubSigningKey;
   };
+  # "${xdg_configHome}/nvim/parser" =
+  #   let
+  #     parsers = pkgs.symlinkJoin {
+  #       name = "treesitter-parsers";
+  #       paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
+  #         c
+  #         lua
+  #       ])).dependencies;
+  #     };
+  #   in
+  #   "${parsers}/parser";
 
-  "./.config/nvim/lua" = {
-    source = ./nvim/lua;
-    recursive = true;
-  };
+  # nvchad:
+  # "./.config/nvim/lua" = {
+  #     source = ./nvim/lua;
+  #     recursive = true;
+  #   };
 # Initializes Emacs with org-mode so we can tangle the main config
 #  ".emacs.d/init.el" = {
 #    text = builtins.readFile ../shared/config/emacs/init.el;

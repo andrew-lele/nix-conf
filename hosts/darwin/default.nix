@@ -17,7 +17,7 @@ let user = "le"; in
 
   # Setup user, packages, programs
   nix = {
-    package = pkgs.nixUnstable;
+    package = pkgs.nixVersions.git;
     settings.trusted-users = [ "@admin" "${user}" ];
 
     gc = {
@@ -44,7 +44,6 @@ let user = "le"; in
   environment.pathsToLink = [ "/share/zsh" ];
 
   # Enable fonts dir
-  fonts.fontDir.enable = true;
 
 #  launchd.user.agents.emacs.path = [ config.environment.systemPath ];
 #  launchd.user.agents.emacs.serviceConfig = {

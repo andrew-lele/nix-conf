@@ -7,7 +7,7 @@ let
   #   #!/bin/sh
   #   emacsclient -c -n &
   # '';
-  sharedFiles = import ../shared/files.nix { inherit config pkgs; };
+  sharedFiles = import ../shared/files.nix { inherit user config pkgs; };
   additionalFiles = import ./files.nix { inherit user config pkgs; };
 in
 {
@@ -43,6 +43,7 @@ in
 
   # Enable home-manager
   home-manager = {
+    # https://github.com/nvim-treesitter/nvim-treesitter#i-get-query-error-invalid-node-type-at-position
     useGlobalPkgs = true;
     users.${user} = { pkgs, config, lib, ... }:{
       home = {
@@ -58,6 +59,34 @@ in
           KUBECONFIG = "~/.kube/config";
         };
       };
+      xdg.configFile."nvim/parser".source =
+        let
+          parsers = pkgs.symlinkJoin {
+            name = "treesitter-parsers";
+            paths = (pkgs.vimPlugins.nvim-treesitter.withPlugins (plugins: with plugins; [
+              c
+              lua
+              rust
+              go
+              python
+              javascript
+              typescript
+              markdown
+              nix
+              html
+              bash
+              yaml
+              toml
+              json
+              jsonc
+            ])).dependencies;
+          };
+        in
+        "${parsers}/parser";
+
+      # Normal LazyVim config here, see https://github.com/LazyVim/starter/tree/main/lua
+      xdg.configFile."nvim/lua".source = ../shared/nvim/lua;
+
       programs = {} // import ../shared/home-manager.nix { inherit config pkgs lib; };
 
       # Marked broken Oct 20, 2022 check later to remove this

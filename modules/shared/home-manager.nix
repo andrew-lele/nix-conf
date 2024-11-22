@@ -5,6 +5,7 @@ let name = "andrew";
     email = "andrew.le197@gmail.com";
 in
 {
+
   # Shared shell configuration
   git = {
     enable = true;
@@ -30,7 +31,7 @@ in
 
   zsh = {
     enable = true;
-    enableAutosuggestions = true;
+    autosuggestion.enable = true;
     enableCompletion = true;
     initExtraBeforeCompInit = ''
 exec fish
@@ -64,7 +65,7 @@ exec fish
     '';
     
   };
-  neovim = import ./nvim/default.nix { inherit config lib pkgs; };
+  neovim = import ./nvim/lazy.nix { inherit config lib pkgs; };
   vim = {
     enable = true;
     plugins = with pkgs.vimPlugins; [ vim-airline vim-airline-themes vim-startify vim-tmux-navigator ];
@@ -230,7 +231,7 @@ exec fish
       add_newline = false;
       format = ''
 󰶞 $directory$nix_shell$git_status$kubernetes$helm$rust$battery
-󱅾 }  
+󱅾   
       '';
       directory = {
         disabled = false;

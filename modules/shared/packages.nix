@@ -27,6 +27,7 @@ with pkgs; [
   direnv
   podman
   qemu
+  go
 
   # Encryption and security tools
   age
@@ -51,7 +52,6 @@ with pkgs; [
   ripgrep
   tree
   unzip
-
 #work
   # google-cloud-sdk
   (google-cloud-sdk.withExtraComponents( with google-cloud-sdk.components; [
