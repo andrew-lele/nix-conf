@@ -12,7 +12,9 @@ let
 in
 {
 
-  "${config.users.users.${user}.home}/.kube/config".source = ./files/kubeconf;
+  # make a base k8s config, but since many programs write to this
+  # init the base as a separate nix store'd file then copy to .kube/config
+  "${config.users.users.${user}.home}/.kube/nix.config".source = ./files/kubeconf;
   "${config.users.users.${user}.home}/.gitconfig" = {
     text = ''
       [user]

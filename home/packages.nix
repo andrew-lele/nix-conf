@@ -28,7 +28,11 @@ with pkgs;
   oh-my-zsh
   thefuck
   podman
+  kind
   go
+  python313
+  yq
+  zsh-vi-mode
 
   fd
   meslo-lgs-nf

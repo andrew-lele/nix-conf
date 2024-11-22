@@ -53,10 +53,19 @@ in
       }:
       {
         home = {
+          activation = {
+            copyKubeConf = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+              if [ ! -f "${config.home.homeDirectory}/.kube/config" ]; then
+                run --quiet cp -L ${config.home.homeDirectory}/.kube/nix.config ${config.home.homeDirectory}/.kube/config 
+                run --quiet chmod u+w ${config.home.homeDirectory}/.kube/config
+              fi
+            '';
+          };
           shellAliases = {
             n = "nvim";
             nrb = "darwin-rebuild switch --flake ~/nix-conf";
             k = "kubectl";
+            docker = "podman";
           };
           enableNixpkgsReleaseCheck = false;
           packages = pkgs.callPackage ./packages.nix { };
@@ -68,6 +77,7 @@ in
           stateVersion = "24.11";
           sessionVariables = {
             USE_GKE_GCLOUD_AUTH_PLUGIN = "true";
+            USER_CODE_PATH = "${config.home.homeDirectory}/workspaces/u42-eng";
           };
         };
         xdg.configFile."amethyst/amethyst.yml".source = ./files/amethyst.yaml;
