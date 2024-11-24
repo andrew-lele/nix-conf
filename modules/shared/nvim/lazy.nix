@@ -20,6 +20,7 @@
     markdownlint-cli2
     nixfmt-rfc-style
     nil
+    yaml-language-server
   ];
 
   plugins = with pkgs.vimPlugins; [
@@ -130,9 +131,13 @@
         },
         spec = {
           { "LazyVim/LazyVim", import = "lazyvim.plugins" },
+          { import = "lazyvim.plugins.extras.coding.mini-comment" },
+          { import = "lazyvim.plugins.extras.coding.mini-surround" },
+          { import = "lazyvim.plugins.extras.coding.luasnip" },
           { import = "lazyvim.plugins.extras.dap.core" },
           { import = "lazyvim.plugins.extras.dap.nlua" },
           { import = "lazyvim.plugins.extras.formatting.prettier" },
+          { import = "lazyvim.plugins.extras.lang.go" },
           { import = "lazyvim.plugins.extras.lang.nix" },
           { import = "lazyvim.plugins.extras.lang.yaml" },
 
@@ -143,6 +148,7 @@
           { "williamboman/mason-lspconfig.nvim", enabled = false },
           { "williamboman/mason.nvim", enabled = false },
           -- import/override with your plugins
+          { import = "plugins/colorscheme" },
           { import = "plugins" },
           -- treesitter handled by xdg.configFile."nvim/parser", put this line at the end of spec to clear ensure_installed
           { "nvim-treesitter/nvim-treesitter",
