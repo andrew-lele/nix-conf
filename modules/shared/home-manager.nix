@@ -1,8 +1,14 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
-let name = "andrew";
-    user = "le";
-    email = "andrew.le197@gmail.com";
+let
+  name = "andrew";
+  user = "le";
+  email = "andrew.le197@gmail.com";
 in
 {
 
@@ -15,8 +21,8 @@ in
     signing.key = "FF8F4C5D2A2912B8";
     extraConfig = {
       init.defaultBranch = "main";
-      core = { 
-	    editor = "vim";
+      core = {
+        editor = "vim";
         autocrlf = "input";
       };
       commit.gpgsign = true;
@@ -25,7 +31,7 @@ in
 
     };
     lfs = {
-      enable = true; 
+      enable = true;
     };
   };
 
@@ -34,16 +40,18 @@ in
     autosuggestion.enable = true;
     enableCompletion = true;
     initExtraBeforeCompInit = ''
-exec fish
+      exec fish
     '';
   };
   fish = {
     enable = true;
     plugins = with pkgs.fishPlugins; [
-      { name = "autopair"; src = autopair.src; }
+      {
+        name = "autopair";
+        src = autopair.src;
+      }
     ];
-    shellInit = ''
-    '';
+    shellInit = '''';
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
 
@@ -57,19 +65,27 @@ exec fish
       alias untt="helm dep update && ~/.nix-profile/helm-unittest/untt ."
       alias mfa="~/scripts/mfa.sh"
 
-      
+      ssh-add ~/.ssh/id_github
+
       # Goes at the end:
       starship init fish | source
       direnv hook fish | source
 
     '';
-    
+
   };
   neovim = import ./nvim/lazy.nix { inherit config lib pkgs; };
   vim = {
     enable = true;
-    plugins = with pkgs.vimPlugins; [ vim-airline vim-airline-themes vim-startify vim-tmux-navigator ];
-    settings = { ignorecase = true; };
+    plugins = with pkgs.vimPlugins; [
+      vim-airline
+      vim-airline-themes
+      vim-startify
+      vim-tmux-navigator
+    ];
+    settings = {
+      ignorecase = true;
+    };
     extraConfig = ''
       "" General
       set number
@@ -173,8 +189,8 @@ exec fish
 
       let g:airline_theme='bubblegum'
       let g:airline_powerline_fonts = 1
-      '';
-     };
+    '';
+  };
 
   alacritty = {
     enable = true;
@@ -194,10 +210,14 @@ exec fish
         ];
       };
 
-      # title = "Terminal";
-      import = [ "/Users/le/.config/alacritty/themes/themes/gruvbox_material_medium_dark.toml" ];
-      shell = {
-        program = "zsh";
+      general = {
+        import = [ pkgs.alacritty-theme.everforest_dark ];
+      };
+      terminal = {
+        shell = {
+          program = "zsh";
+        };
+
       };
       window = {
         option_as_alt = "OnlyLeft";
@@ -207,40 +227,40 @@ exec fish
 
   ssh = {
     enable = true;
-
     extraConfig = lib.mkMerge [
       ''
         Host github.com
           Hostname github.com
           IdentitiesOnly yes
       ''
-      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux
-        ''
-          IdentityFile /home/${user}/.ssh/id_github
-        '')
-      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin
-        ''
-          IdentityFile /Users/${user}/.ssh/id_github
-        '')
+      (lib.mkIf pkgs.stdenv.hostPlatform.isLinux ''
+        IdentityFile /home/${user}/.ssh/id_github
+      '')
+      (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin ''
+        IdentityFile /Users/${user}/.ssh/id_github
+      '')
     ];
   };
+
   starship = {
     enable = true;
     # Configuration written to ~/.config/starship.toml
     settings = {
       add_newline = false;
       format = ''
-󰶞 $directory$nix_shell$git_status$kubernetes$helm$rust$battery
-󱅾   
       '';
       directory = {
         disabled = false;
         format = " ~ [$path]($style)[$read_only]($read_only_style) ";
       };
+      git_branch = {
+        disabled = false;
+        symbol = "󰐅 ";
+      };
       git_status = {
         disabled = false;
         ahead = "⇕⇡$\{ahead_count}⇣$\{behind_count}";
-        behind = "⇣$\{count}";
+        behind = "⇣$\{count}";
       };
       kubernetes = {
         disabled = false;
@@ -248,14 +268,17 @@ exec fish
       };
       nix_shell = {
         disabled = false;
-        impure_msg = "[impure shell](bold red)";
-        pure_msg = "[pure shell](bold green)";
-        unknown_msg = "[unknown shell](bold yellow)";
-        format = " [   $state( \($name\))](bold blue) ";
+        impure_msg = "[󱄅 ](bold red)";
+        pure_msg = "[󱄅 ](bold green)";
+        unknown_msg = "[󱄅 ](bold yellow)";
+        format = " [$state(\($name\))](bold blue) ";
       };
       rust = {
         disabled = false;
-        format =  "[ $version](red bold)";
+        format = "[ $version](red bold)";
+      };
+      golang = {
+        disabled = false;
       };
       helm = {
         disabled = false;
@@ -266,5 +289,6 @@ exec fish
         format = "[$percentage$symbol]($style) ";
       };
     };
+    ##
   };
 }

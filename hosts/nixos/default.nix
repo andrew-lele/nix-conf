@@ -1,8 +1,15 @@
-{ config, inputs, pkgs, agenix, ... }:
+{
+  config,
+  inputs,
+  pkgs,
+  agenix,
+  ...
+}:
 
-let user = "le";
-    keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFIYMrKpYQnWTnYdRj1TssL+otUWu8358ZcbbTJItbt le@mac.self
-"]; in
+let
+  user = "le";
+  keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOk8iAnIaa1deoc7jw8YACPNVka1ZFJxhnU4G74TmS+p" ];
+in
 {
   imports = [
     ../../modules/nixos/secrets.nix
@@ -41,7 +48,14 @@ let user = "le";
   # Set your time zone.
   time.timeZone = "America/New_York";
 
-  networking.hostName = "nixos"; # Define your hostname.
+  networking = {
+    hostName = "nixos"; # Define your hostname.
+    firewall.allowedTCPPorts = [
+      6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
+      2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
+      2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+    ];
+  };
 
   # Turn on flag for proprietary software
   nix = {
@@ -51,7 +65,7 @@ let user = "le";
     extraOptions = ''
       experimental-features = nix-command flakes
     '';
-   };
+  };
 
   # Manages keys and such
   programs = {
@@ -122,15 +136,17 @@ let user = "le";
   # Don't require password for users in `wheel` group for these commands
   security.sudo = {
     enable = true;
-    extraRules = [{
-      commands = [
-       {
-         command = "${pkgs.systemd}/bin/reboot";
-         options = [ "NOPASSWD" ];
-        }
-      ];
-      groups = [ "wheel" ];
-    }];
+    extraRules = [
+      {
+        commands = [
+          {
+            command = "${pkgs.systemd}/bin/reboot";
+            options = [ "NOPASSWD" ];
+          }
+        ];
+        groups = [ "wheel" ];
+      }
+    ];
   };
 
   # fonts.packages = with pkgs; [

@@ -6,6 +6,7 @@ _:
 
   # Utility Tools
   "appcleaner"
+  "amethyst"
   "syncthing"
 
   "arc"
