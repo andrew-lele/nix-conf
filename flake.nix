@@ -157,6 +157,13 @@
           inherit system;
           specialArgs = inputs;
           modules = [
+            # overlays
+            (
+              { config, pkgs, ... }:
+              {
+                nixpkgs.overlays = [ alacritty-theme.overlays.default ];
+              }
+            )
             disko.nixosModules.disko
             home-manager.nixosModules.home-manager
             {

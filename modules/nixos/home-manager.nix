@@ -1,10 +1,15 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 let
   user = "le";
-  xdg_configHome  = "/home/${user}/.config";
+  xdg_configHome = "/home/${user}/.config";
   shared-programs = import ../shared/home-manager.nix { inherit config pkgs lib; };
-  shared-files = import ../shared/files.nix { inherit config pkgs; };
+  shared-files = import ../shared/files.nix { inherit user config pkgs; };
 
 in
 {
@@ -12,7 +17,7 @@ in
     enableNixpkgsReleaseCheck = false;
     username = "${user}";
     homeDirectory = "/home/${user}";
-    packages = pkgs.callPackage ./packages.nix {};
+    packages = pkgs.callPackage ./packages.nix { };
     file = shared-files // import ./files.nix { inherit user; };
     stateVersion = "24.05";
   };
@@ -37,6 +42,8 @@ in
 
   };
 
-  programs = shared-programs // { gpg.enable = true; };
+  programs = shared-programs // {
+    gpg.enable = true;
+  };
 
 }

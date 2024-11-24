@@ -3,7 +3,8 @@
 {
   boot.supportedFilesystems = [ "zfs" ];
   networking.hostId = "0be50e58";
-  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+  # deprecated, but keeping here commented in cause of build errors 
+  # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   boot.zfs.devNodes = "/dev/disk/by-partlabel";
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.loader.efi.canTouchEfiVariables = false;
@@ -40,7 +41,7 @@
     "/dev/sdg"
   ];
 
-# can't login to root bu here's a password!
-users.users.root.initialHashedPassword = "$6$rrL.IYVFk5RgIrtt$uQQSVWYiuGIJucBM3yYWmY.94teIhiUNQ2inuFqPMfwGwZk2m32i7vhASG3sX6cVOqz/TrH9RPfp1O3vVbyLC/";
+  # can't login to root bu here's a password!
+  users.users.root.initialHashedPassword = "$6$rrL.IYVFk5RgIrtt$uQQSVWYiuGIJucBM3yYWmY.94teIhiUNQ2inuFqPMfwGwZk2m32i7vhASG3sX6cVOqz/TrH9RPfp1O3vVbyLC/";
 
 }
