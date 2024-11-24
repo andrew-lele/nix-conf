@@ -248,10 +248,12 @@ in
     settings = {
       add_newline = false;
       format = ''
+        󰶞  $directory$git_branch$git_status$kubernetes󰿟󰿟 $helm$rust$golang$battery
+        󱅾  $nix_shell
       '';
       directory = {
         disabled = false;
-        format = " ~ [$path]($style)[$read_only]($read_only_style) ";
+        format = "[$path]($style)[$read_only]($read_only_style) ";
       };
       git_branch = {
         disabled = false;
