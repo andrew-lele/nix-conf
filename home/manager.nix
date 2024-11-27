@@ -63,7 +63,7 @@ in
           };
           shellAliases = {
             n = "nvim";
-            nrb = "darwin-rebuild switch --flake ~/nix-conf";
+            nrb = "sudo nixos-rebuild switch --flake ~/nix-conf";
             k = "kubectl";
             docker = "podman";
           };

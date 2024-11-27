@@ -8,23 +8,24 @@
 let
   name = "andrew";
   user = "le";
-  email = "andle@paloaltonetworks.com";
+  email = "andrew.le197@gmail.com";
 in
 {
 
   # Shared shell configuration
   git = {
-    enable = false;
+    enable = true;
     ignores = [ "*.swp" ];
-    userName = "andle";
+    userName = name;
     userEmail = email;
+    signing.key = "FF8F4C5D2A2912B8";
     extraConfig = {
       init.defaultBranch = "main";
       core = {
         editor = "vim";
         autocrlf = "input";
       };
-      commit.gpgsign = false;
+      commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
 
@@ -38,25 +39,12 @@ in
     enable = true;
     autosuggestion.enable = true;
     enableCompletion = true;
-    syntaxHighlighting.enable = true;
-    oh-my-zsh = {
-      enable = true;
-      plugins = [
-        "git"
-        "golang"
-        "thefuck"
-        "direnv"
-        "starship"
-      ];
-    };
     initExtraBeforeCompInit = ''
-      set -a
-      source ~/.config/goods.env
-      set +a
+      exec fish
     '';
   };
   fish = {
-    enable = false;
+    enable = true;
     plugins = with pkgs.fishPlugins; [
       {
         name = "autopair";
@@ -67,12 +55,7 @@ in
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
 
-      alias n="nvim"
-      alias hms="home-manager switch"
-      alias nhm="n $HOME/.config/home-manager/"
-      alias drb="darwin-rebuild switch --flake ~/.config/nix-darwin"
       alias dnsr="sudo dscacheutil -flushcache; sudo killall -HUP mDNSResponder"
-      alias nrb="cd $HOME/nix-conf/ && nix run .#build-switch"
       alias k="kubectl"
       alias untt="helm dep update && ~/.nix-profile/helm-unittest/untt ."
       alias mfa="~/scripts/mfa.sh"
@@ -81,6 +64,7 @@ in
 
       # Goes at the end:
       starship init fish | source
+      direnv hook fish | source
 
     '';
 
@@ -221,9 +205,7 @@ in
         ];
       };
 
-      # title = "Terminal";
       general = {
-        # import = [ "${builtins.toString ../.}/alacritty-theme/themes/everforest_dark.toml" ];
         import = [ pkgs.alacritty-theme.everforest_dark ];
       };
       terminal = {
@@ -240,7 +222,6 @@ in
 
   ssh = {
     enable = true;
-
     extraConfig = lib.mkMerge [
       ''
         Host github.com
@@ -255,22 +236,29 @@ in
       '')
     ];
   };
+
   starship = {
     enable = true;
     # Configuration written to ~/.config/starship.toml
     settings = {
       add_newline = false;
       format = ''
-        󰶞 $directory$git_branch$git_status$kubernetes󰿟󰿟 $helm$rust$golang$battery
-        󱅾 $nix_shell 
+        󰶞  $directory$git_branch$git_status$kubernetes󰿟󰿟 $helm$rust$golang$battery$hostname
+        󱅾  $nix_shell
       '';
       directory = {
         disabled = false;
-        format = " ~ [$path]($style)[$read_only]($read_only_style) ";
+        format = "[$path]($style)[$read_only]($read_only_style) ";
       };
       git_branch = {
         disabled = false;
         symbol = "󰐅 ";
+      };
+      hostname = {
+        disabled = false;
+        style = "bold dimmed white";
+        ssh_symbol = " ";
+        format = "[$ssh_symbol$hostname]($style) ";
       };
       git_status = {
         disabled = false;
@@ -304,5 +292,6 @@ in
         format = "[$percentage$symbol]($style) ";
       };
     };
+    ##
   };
 }
