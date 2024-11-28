@@ -26,7 +26,7 @@ let
 in
 {
   imports = [
-#    ../../modules/shared
+    #    ../../modules/shared
     ./hardware-configuration.nix
   ];
 
@@ -63,7 +63,7 @@ in
   time.timeZone = "America/New_York";
 
   networking = {
-    hostName = "nixos"; # Define your hostname.
+    hostName = "mitchell"; # Define your hostname.
     firewall.enable = false;
     firewall.allowedTCPPorts = [
       6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
@@ -100,56 +100,10 @@ in
   };
 
   services = {
-    # xserver = {
     k3s = kubernetes;
-    #   enable = true;
-    #
-    #   # Uncomment these for AMD or Nvidia GPU
-    #   # boot.initrd.kernelModules = [ "amdgpu" ];
-    #   # services.xserver.videoDrivers = [ "amdgpu" ];
-    #   # services.xserver.videoDrivers = [ "nvidia" ];
-    #
-    #   # Comment this for AMD GPU
-    #   # This helps fix tearing of windows for Nvidia cards
-    #   # services.xserver.screenSection = ''
-    #   #   Option       "metamodes" "nvidia-auto-select +0+0 {ForceFullCompositionPipeline=On}"
-    #   #   Option       "AllowIndirectGLXProtocol" "off"
-    #   #   Option       "TripleBuffer" "on"
-    #   # '';
-    #
-    #   # LightDM Display Manager
-    #
-    #   # Turn Caps Lock into Ctrl
-    #   layout = "us";
-    #   xkbOptions = "ctrl:nocaps";
-    #
-    #   # Better support for general peripherals
-    #   libinput.enable = true;
-    # };
 
     # Let's be able to SSH into this machine
     openssh.enable = true;
-
-    # Sync state between machines
-    # Sync state between machines
-    # syncthing = {
-    #   enable = true;
-    #   openDefaultPorts = true;
-    #   dataDir = "/home/${user}/.local/share/syncthing";
-    #   configDir = "/home/${user}/.config/syncthing";
-    #   user = "${user}";
-    #   group = "users";
-    #   guiAddress = "127.0.0.1:8384";
-    #   overrideFolders = true;
-    #   overrideDevices = true;
-    #
-    #   settings = {
-    #     devices = {};
-    #     options.globalAnnounceEnabled = false; # Only sync on LAN
-    #   };
-    # };
-
-    # gvfs.enable = true; # Mount, trash, and other functionalities
   };
 
   # Don't require password for users in `wheel` group for these commands
@@ -185,4 +139,3 @@ in
   ];
   system.stateVersion = "24.05"; # Don't change this
 }
-

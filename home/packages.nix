@@ -61,4 +61,10 @@ with pkgs;
   ))
   helm-docs
   kubectx
+  cilium-cli
+  hubble
+  (writeShellScriptBin "helmSetup" ''
+    echo "Setting up helm! !"
+    helm upgrade cilium --install /home/le/workspaces/lab/k8s/cilium --namespace kube-system
+  '')
 ]
