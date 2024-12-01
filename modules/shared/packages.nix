@@ -1,6 +1,7 @@
 { pkgs }:
 
-with pkgs; [
+with pkgs;
+[
   # General packages for development and system management
   act
   alacritty
@@ -8,8 +9,8 @@ with pkgs; [
   bash-completion
   bat
   coreutils
+  dig
   killall
-  neofetch
   openssh
   pandoc
   sqlite
@@ -28,6 +29,7 @@ with pkgs; [
   podman
   qemu
   go
+  hubble
 
   # Encryption and security tools
   age
@@ -39,9 +41,11 @@ with pkgs; [
   # noto-fonts
   # noto-fonts-emoji
   meslo-lgs-nf
-  (nerdfonts.override { fonts = [ 
-    "JetBrainsMono"
-  ];})
+  (nerdfonts.override {
+    fonts = [
+      "JetBrainsMono"
+    ];
+  })
   powerline-symbols
   powerline-fonts
   # Text and terminal utilities
@@ -52,11 +56,14 @@ with pkgs; [
   ripgrep
   tree
   unzip
-#work
+  #work
   # google-cloud-sdk
-  (google-cloud-sdk.withExtraComponents( with google-cloud-sdk.components; [
-    gke-gcloud-auth-plugin
-  ]))
+  (google-cloud-sdk.withExtraComponents (
+    with google-cloud-sdk.components;
+    [
+      gke-gcloud-auth-plugin
+    ]
+  ))
   hugo
   crystal
   helm-docs

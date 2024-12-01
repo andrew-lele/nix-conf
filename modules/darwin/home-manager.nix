@@ -68,11 +68,12 @@ in
             # { "emacs-launcher.command".source = myEmacsLauncher; }
           ];
           shellAliases = {
-            syncNix = "rsync -avz ~/nix-conf/ le@nixos.self:/home/le/nix-conf";
+            #            syncNix = "rsync -avz ~/nix-conf/ le@nixos.self:/home/le/nix-conf";
+            syncNix = "rsync -avz ~/nix-conf/ le@10.1.30.101:/home/le/nix-conf";
           };
           stateVersion = "23.11";
           sessionVariables = {
-            KUBECONFIG = "~/.kube/config";
+            KUBECONFIG = "/Users/${user}/.kube/config";
           };
         };
         xdg.configFile."nvim/parser".source =

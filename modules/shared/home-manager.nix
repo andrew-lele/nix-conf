@@ -248,7 +248,7 @@ in
     settings = {
       add_newline = false;
       format = ''
-        󰶞  $directory$git_branch$git_status$kubernetes󰿟󰿟 $helm$rust$golang$battery
+        󰶞  $directory$git_branch$git_status$kubernetes󰿟󰿟 $helm$rust$golang$battery$hostname
         󱅾  $nix_shell
       '';
       directory = {
@@ -258,6 +258,12 @@ in
       git_branch = {
         disabled = false;
         symbol = "󰐅 ";
+      };
+      hostname = {
+        disabled = false;
+        style = "bold dimmed white";
+        ssh_symbol = " ";
+        format = "[$ssh_symbol$hostname]($style) ";
       };
       git_status = {
         disabled = false;
