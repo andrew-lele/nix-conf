@@ -14,7 +14,7 @@ let
 
   ];
   kubernetes = {
-    enable = true;
+    enable = false;
     role = "agent";
     token = "init";
     serverAddr = "https://mitchell.self:6443";
@@ -31,7 +31,7 @@ in
     ../../modules/shared
     ../../modules/shared/cachix
 
-    ./hardware-config-reference.nix
+    ./hardware-configuration.nix
     ./zfs.nix
     agenix.nixosModules.default
   ];
