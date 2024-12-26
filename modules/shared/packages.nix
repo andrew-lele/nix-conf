@@ -9,9 +9,13 @@ with pkgs;
   bash-completion
   bat
   coreutils
+  cilium-cli
+  hubble
   dig
   killall
   openssh
+  kubectx
+  cmctl
   pandoc
   sqlite
   wget
@@ -29,7 +33,6 @@ with pkgs;
   podman
   qemu
   go
-  hubble
 
   # Encryption and security tools
   age
@@ -67,4 +70,6 @@ with pkgs;
   hugo
   crystal
   helm-docs
+  wireguard-ui
+  wireguard-tools
 ]
