@@ -1,8 +1,11 @@
 { pkgs }:
 
 with pkgs;
-let shared-packages = import ../shared/packages.nix { inherit pkgs; }; in
-shared-packages ++ [
+let
+  shared-packages = import ../shared/packages.nix { inherit pkgs; };
+in
+shared-packages
+++ [
 
   # App and package management
   home-manager
@@ -31,4 +34,7 @@ shared-packages ++ [
   pinentry-curses
   pcmanfm # Our file browser
   xdg-utils
+
+  # K8s
+  cilium-cli
 ]

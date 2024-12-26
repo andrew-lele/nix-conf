@@ -7,9 +7,11 @@
 
 {
   enable = true;
+  defaultEditor = true;
   extraPackages = with pkgs; [
     # LazyVim
     lua-language-server
+    helm-ls
     stylua
     # Telescope
     ripgrep
@@ -70,6 +72,7 @@
         tokyonight-nvim
         trouble-nvim
         vim-illuminate
+        vim-helm
         vim-startuptime
         vim-prettier
         which-key-nvim
@@ -140,6 +143,7 @@
           { import = "lazyvim.plugins.extras.lang.go" },
           { import = "lazyvim.plugins.extras.lang.nix" },
           { import = "lazyvim.plugins.extras.lang.yaml" },
+          { import = "lazyvim.plugins.extras.lang.helm" },
 
           -- The following configs are needed for fixing lazyvim on nix
           -- force enable telescope-fzf-native.nvim

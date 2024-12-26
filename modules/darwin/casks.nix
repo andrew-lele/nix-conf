@@ -10,6 +10,7 @@ _:
   "syncthing"
 
   "arc"
+  "zoom"
 
   # AI
   "diffusionbee"

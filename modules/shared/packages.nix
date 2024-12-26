@@ -1,6 +1,7 @@
 { pkgs }:
 
-with pkgs; [
+with pkgs;
+[
   # General packages for development and system management
   act
   alacritty
@@ -8,9 +9,13 @@ with pkgs; [
   bash-completion
   bat
   coreutils
+  cilium-cli
+  hubble
+  dig
   killall
-  neofetch
   openssh
+  kubectx
+  cmctl
   pandoc
   sqlite
   wget
@@ -39,9 +44,11 @@ with pkgs; [
   # noto-fonts
   # noto-fonts-emoji
   meslo-lgs-nf
-  (nerdfonts.override { fonts = [ 
-    "JetBrainsMono"
-  ];})
+  (nerdfonts.override {
+    fonts = [
+      "JetBrainsMono"
+    ];
+  })
   powerline-symbols
   powerline-fonts
   # Text and terminal utilities
@@ -52,12 +59,17 @@ with pkgs; [
   ripgrep
   tree
   unzip
-#work
+  #work
   # google-cloud-sdk
-  (google-cloud-sdk.withExtraComponents( with google-cloud-sdk.components; [
-    gke-gcloud-auth-plugin
-  ]))
+  (google-cloud-sdk.withExtraComponents (
+    with google-cloud-sdk.components;
+    [
+      gke-gcloud-auth-plugin
+    ]
+  ))
   hugo
   crystal
   helm-docs
+  wireguard-ui
+  wireguard-tools
 ]

@@ -8,7 +8,22 @@
 
 let
   user = "le";
-  keys = [ "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOk8iAnIaa1deoc7jw8YACPNVka1ZFJxhnU4G74TmS+p" ];
+  keys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOk8iAnIaa1deoc7jw8YACPNVka1ZFJxhnU4G74TmS+p"
+    "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCul+vpn+aybmohQMZ9IuRoZsqJHRyJ42UahkzwqQbgkNFnrnuXVx0vIXLW2il0jORFb+i5j337Ps7A+XkFUccH3UyqIWiUl62N5Bn37uLeP37lmtcAyTQ2avLG052lWY8h+yJUezRd9wCSHj7GBn0pyY8f8t7CbqwzUDLUbG4U1yQhXdnG/Agrcm7BZsa0GfqRqH+kqYVfESritBQpJvB6IkPP1dG8iFOrzMoTQvvmOC5937QHpUOIwO+4Vu9cldWBhtJT+XcW5SYw8KRyihwTUpvPIfqAzx/HjtxcuwJmN+JRBK5P/Vy36kK6ip882PnNvlsGrqUYxMM/d/lRZV23YsGHSAZPjK0pykJTB2NyTaJiNit6gCzj8za18ak4c7dTYsy8fhifZ7zh/u7H4e+a6XPG5KNHs0Hx3D+7qE1da4dWXXnvxksDwRIHRTCFmgHdxg7A3Q056T4bOzdGZDFcRHw2CmXW+uAD2kwKqbvP0sm35H36qbJBwBJI0Q0Ry7c= le@mac.self"
+
+  ];
+  kubernetes = {
+    enable = true;
+    role = "agent";
+    token = "init";
+    serverAddr = "https://mitchell.self:6443";
+    extraFlags = toString [
+      "--node-label=k8s.andle.day/serverclass=worker"
+      "--node-label=k8s.andle.day/gateway=true"
+      "--disable=traefik"
+    ];
+  };
 in
 {
   imports = [
@@ -20,7 +35,6 @@ in
     ./zfs.nix
     agenix.nixosModules.default
   ];
-
   # Backup user is always good to have :)
   users.users = {
     andrew = {
@@ -54,11 +68,14 @@ in
   time.timeZone = "America/New_York";
 
   networking = {
-    hostName = "nixos"; # Define your hostname.
+    hostName = "jihun"; # Define your hostname.
+    firewall.enable = false;
     firewall.allowedTCPPorts = [
       6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
       2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
       2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+      10250 # k3s, metrics
+      4244 # k3s, cilium hubble
     ];
   };
 
@@ -89,6 +106,7 @@ in
 
   services = {
     # xserver = {
+    k3s = kubernetes;
     #   enable = true;
     #
     #   # Uncomment these for AMD or Nvidia GPU
@@ -165,12 +183,12 @@ in
   #   noto-fonts-emoji
   # ];
   systemd.oomd.enable = false;
+  systemd.enableEmergencyMode = false;
   environment.systemPackages = with pkgs; [
     agenix.packages."${pkgs.system}".default # "x86_64-linux"
     vim
     gitAndTools.gitFull
     inetutils
   ];
-
   system.stateVersion = "24.05"; # Don't change this
 }

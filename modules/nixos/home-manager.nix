@@ -15,6 +15,9 @@ in
 {
   home = {
     enableNixpkgsReleaseCheck = false;
+    sessionVariables = {
+      # KUBECONFIG = "/etc/rancher/k3s/k3s.yaml";
+    };
     username = "${user}";
     homeDirectory = "/home/${user}";
     packages = pkgs.callPackage ./packages.nix { };

@@ -1,6 +1,13 @@
-{ agenix, config, pkgs, ... }:
+{
+  agenix,
+  config,
+  pkgs,
+  ...
+}:
 
-let user = "le"; in
+let
+  user = "le";
+in
 
 {
 
@@ -9,21 +16,29 @@ let user = "le"; in
     ../../modules/darwin/home-manager.nix
     ../../modules/shared
     ../../modules/shared/cachix
-     agenix.darwinModules.default
+    agenix.darwinModules.default
   ];
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
+  services.tailscale.enable = true;
 
   # Setup user, packages, programs
   nix = {
     package = pkgs.nixVersions.git;
-    settings.trusted-users = [ "@admin" "${user}" ];
+    settings.trusted-users = [
+      "@admin"
+      "${user}"
+    ];
 
     gc = {
       user = "root";
       automatic = true;
-      interval = { Weekday = 0; Hour = 2; Minute = 0; };
+      interval = {
+        Weekday = 0;
+        Hour = 2;
+        Minute = 0;
+      };
       options = "--delete-older-than 30d";
     };
 
@@ -37,25 +52,28 @@ let user = "le"; in
   system.checks.verifyNixPath = false;
 
   # Load configuration that is shared across systems
-  environment.systemPackages = with pkgs; [
-    # emacs-unstable
-    agenix.packages."${pkgs.system}".default
-  ] ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
+  environment.systemPackages =
+    with pkgs;
+    [
+      # emacs-unstable
+      agenix.packages."${pkgs.system}".default
+    ]
+    ++ (import ../../modules/shared/packages.nix { inherit pkgs; });
   environment.pathsToLink = [ "/share/zsh" ];
 
   # Enable fonts dir
 
-#  launchd.user.agents.emacs.path = [ config.environment.systemPath ];
-#  launchd.user.agents.emacs.serviceConfig = {
-#    KeepAlive = true;
-#    ProgramArguments = [
-#      "/bin/sh"
-#      "-c"
-#      "/bin/wait4path ${pkgs.emacs}/bin/emacs && exec ${pkgs.emacs}/bin/emacs --fg-daemon"
-#    ];
-#    StandardErrorPath = "/tmp/emacs.err.log";
-#    StandardOutPath = "/tmp/emacs.out.log";
-#  };
+  #  launchd.user.agents.emacs.path = [ config.environment.systemPath ];
+  #  launchd.user.agents.emacs.serviceConfig = {
+  #    KeepAlive = true;
+  #    ProgramArguments = [
+  #      "/bin/sh"
+  #      "-c"
+  #      "/bin/wait4path ${pkgs.emacs}/bin/emacs && exec ${pkgs.emacs}/bin/emacs --fg-daemon"
+  #    ];
+  #    StandardErrorPath = "/tmp/emacs.err.log";
+  #    StandardOutPath = "/tmp/emacs.out.log";
+  #  };
 
   system = {
     stateVersion = 4;
