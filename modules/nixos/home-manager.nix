@@ -25,6 +25,36 @@ in
     stateVersion = "24.05";
   };
 
+  xdg.configFile."nvim/parser".source =
+    let
+      parsers = pkgs.symlinkJoin {
+        name = "treesitter-parsers";
+        paths =
+          (pkgs.vimPlugins.nvim-treesitter.withPlugins (
+            plugins: with plugins; [
+              c
+              lua
+              rust
+              go
+              python
+              javascript
+              typescript
+              markdown
+              nix
+              html
+              bash
+              yaml
+              toml
+              json
+              jsonc
+            ]
+          )).dependencies;
+      };
+    in
+    "${parsers}/parser";
+
+  # Normal LazyVim config here, see https://github.com/LazyVim/starter/tree/main/lua
+  xdg.configFile."nvim/lua".source = ../shared/nvim/lua;
   # Use a dark theme
   # gtk = {
   #   enable = true;
