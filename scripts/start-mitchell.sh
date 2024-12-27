@@ -59,7 +59,7 @@
 
 set -ex
 
-DISK=(/dev/sda /dev/sdb /dev/sdc /dev/sdd /dev/sde /dev/sdg)
+DISK=(/dev/sda /dev/sdb /dev/sdc /dev/sde /dev/sdh /dev/sdi)
 #DISK=(/dev/vda /dev/vdb)
 
 # How to name the partitions. This will be visible in 'gdisk -l /dev/disk' and
@@ -78,8 +78,8 @@ SWAPSIZE=2G
 # mirror, raidz types and draid types. You will have to manually add other
 # devices like spares, intent log devices, cache and so on. Here we're just
 # setting this up for installation after all.
-#ZFS_BOOT_VDEV="mirror"
-#ZFS_ROOT_VDEV="mirror"
+ZFS_BOOT_VDEV="raidz"
+ZFS_ROOT_VDEV="raidz"
 
 # How to name the boot pool and root pool.
 ZFS_BOOT="bpool"
@@ -145,7 +145,7 @@ unset i d
 sleep 3s
 
 # Create the boot pool
-zpool create \
+zpool create -f \
 	-o compatibility=grub2 \
 	-o ashift=12 \
 	-o autotrim=on \
@@ -279,12 +279,12 @@ tee -a ${ZFSCFG} <<-'EOF'
   '';
 
   boot.loader.grub.extraInstallCommands = ''
-    ESP_MIRROR=$(mktemp -d)
-    cp -r /boot/efi/EFI $ESP_MIRROR
+    ESP_MIRROR=$(${pkgs.coreutils}/bin/mktemp -d)
+    ${pkgs.coreutils}/bin/cp -r /boot/efi/EFI $ESP_MIRROR
     for i in /boot/efis/*; do
-      cp -r $ESP_MIRROR/EFI $i
+      ${pkgs.coreutils}/bin/cp -r $ESP_MIRROR/EFI $i
     done
-    rm -rf $ESP_MIRROR
+    ${pkgs.coreutils}/bin/rm -rf $ESP_MIRROR
   '';
 
   boot.loader.grub.devices = [

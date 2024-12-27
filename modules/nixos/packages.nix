@@ -37,4 +37,7 @@ shared-packages
 
   # K8s
   cilium-cli
+
+  #Networking
+  unifi
 ]

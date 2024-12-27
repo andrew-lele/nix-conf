@@ -14,7 +14,7 @@ let
 
   ];
   kubernetes = {
-    enable = true;
+    enable = false;
     role = "agent";
     token = "init";
     serverAddr = "https://mitchell.self:6443";
@@ -31,7 +31,7 @@ in
     ../../modules/shared
     ../../modules/shared/cachix
 
-    ./hardware-config-reference.nix
+    ./hardware-configuration.nix
     ./zfs.nix
     agenix.nixosModules.default
   ];
@@ -69,14 +69,36 @@ in
 
   networking = {
     hostName = "jihun"; # Define your hostname.
-    firewall.enable = false;
-    firewall.allowedTCPPorts = [
-      6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
-      2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
-      2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
-      10250 # k3s, metrics
-      4244 # k3s, cilium hubble
-    ];
+    firewall = {
+      enable = true;
+      allowedTCPPorts = [
+        22
+        # NFS ports START
+        111
+        2049
+        4000
+        4001
+        4002
+        20048
+        # NFS ports END
+        6443 # k3s: required so that pods can reach the API server (running on port 6443 by default)
+        2379 # k3s, etcd clients: required if using a "High Availability Embedded etcd" configuration
+        2380 # k3s, etcd peers: required if using a "High Availability Embedded etcd" configuration
+        10250 # k3s, metrics
+        4244 # k3s, cilium hubble
+      ];
+      allowedUDPPorts = [
+        # NFS ports START
+        111
+        2049
+        4000
+        4001
+        4002
+        20048
+        # NFS ports END
+      ];
+    };
+
   };
 
   # Turn on flag for proprietary software
@@ -105,7 +127,23 @@ in
   };
 
   services = {
-    # xserver = {
+    # zfs set sharenfs="rw=100.100.2.10:10.1.0.0/16,no_root_squash,all_squash,insecure" rpool/export/ba
+    nfs.server = {
+      enable = true;
+      lockdPort = 4001;
+      mountdPort = 4002;
+      statdPort = 4000;
+      exports = ''
+        /export/ba 100.100.2.10(rw,no_root_squash,all_squash,insecure) 10.1.0.0/16(rw,no_root_squash,all_squash,insecure)
+      '';
+    };
+    tailscale.enable = true;
+    unifi = {
+      enable = true;
+      unifiPackage = pkgs.unifi;
+      openFirewall = true;
+      mongodbPackage = pkgs.mongodb-ce;
+    };
     k3s = kubernetes;
     #   enable = true;
     #
@@ -191,4 +229,8 @@ in
     inetutils
   ];
   system.stateVersion = "24.05"; # Don't change this
+  fileSystems."/export/ba" = {
+    device = "/export/ba";
+    options = [ "bind" ];
+  };
 }

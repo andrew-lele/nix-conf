@@ -2,9 +2,7 @@
 
 {
   boot.supportedFilesystems = [ "zfs" ];
-  networking.hostId = "0be50e58";
-  # deprecated, but keeping here commented in cause of build errors 
-  # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+  networking.hostId = "46257c0b";
   boot.zfs.devNodes = "/dev/disk/by-partlabel";
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.loader.efi.canTouchEfiVariables = false;
@@ -27,7 +25,7 @@
     ESP_MIRROR=$(${pkgs.coreutils}/bin/mktemp -d)
     ${pkgs.coreutils}/bin/cp -r /boot/efi/EFI $ESP_MIRROR
     for i in /boot/efis/*; do
-     ${pkgs.coreutils}/bin/cp -r $ESP_MIRROR/EFI $i
+      ${pkgs.coreutils}/bin/cp -r $ESP_MIRROR/EFI $i
     done
     ${pkgs.coreutils}/bin/rm -rf $ESP_MIRROR
   '';
@@ -37,11 +35,10 @@
     "/dev/sdb"
     "/dev/sdc"
     "/dev/sdd"
-    "/dev/sde"
+    "/dev/sdf"
     "/dev/sdg"
   ];
 
-  # can't login to root bu here's a password!
   users.users.root.initialHashedPassword = "$6$rrL.IYVFk5RgIrtt$uQQSVWYiuGIJucBM3yYWmY.94teIhiUNQ2inuFqPMfwGwZk2m32i7vhASG3sX6cVOqz/TrH9RPfp1O3vVbyLC/";
 
 }
