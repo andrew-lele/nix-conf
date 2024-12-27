@@ -9,6 +9,7 @@
   tempoThriftGrpc = 3006;
   tempoThriftBinary = 3007;
   tempoThriftCompact = 3008;
+  promtail = 3009;
   unifi = 8080;
   unifi1 = 8843;
   unifi2 = 10001;
