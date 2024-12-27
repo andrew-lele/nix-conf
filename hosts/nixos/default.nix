@@ -24,12 +24,14 @@ let
       "--disable=traefik"
     ];
   };
+  ports = import ./custom-ports.nix;
 in
 {
   imports = [
     ../../modules/nixos/secrets.nix
     ../../modules/shared
     ../../modules/shared/cachix
+    ./monitoring.nix
 
     ./hardware-configuration.nix
     ./zfs.nix
@@ -71,7 +73,8 @@ in
     hostName = "jihun"; # Define your hostname.
     firewall = {
       enable = true;
-      allowedTCPPorts = [
+      allowedTCPPorts = (pkgs.lib.attrValues ports) ++ [
+
         22
         # NFS ports START
         111
@@ -128,6 +131,7 @@ in
 
   services = {
     # zfs set sharenfs="rw=100.100.2.10:10.1.0.0/16,no_root_squash,all_squash,insecure" rpool/export/ba
+
     nfs.server = {
       enable = true;
       lockdPort = 4001;
