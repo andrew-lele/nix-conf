@@ -14,4 +14,5 @@
   unifi1 = 8843;
   unifi2 = 10001;
   unifi3 = 3478;
+  unifi4 = 8443;
 }

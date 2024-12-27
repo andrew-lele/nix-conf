@@ -35,6 +35,7 @@ in
 
     ./hardware-configuration.nix
     ./zfs.nix
+    ./boot.nix
     agenix.nixosModules.default
   ];
   # Backup user is always good to have :)

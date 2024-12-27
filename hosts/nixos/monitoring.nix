@@ -32,6 +32,10 @@ let
           type = "loki";
           url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
         }
+        {
+          name = "ZFS";
+          type = "7968";
+        }
         # But not all - c.f. https://github.com/fr-ser/grafana-sqlite-datasource/issues/141
       ];
 

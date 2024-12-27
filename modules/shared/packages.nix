@@ -14,6 +14,7 @@ with pkgs;
   dig
   killall
   openssh
+  openssl
   kubectx
   cmctl
   pandoc

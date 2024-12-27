@@ -1,66 +1,9 @@
-# # initiate the install
-# wipefs -a /dev/sda
-# wipefs -a /dev/sdb
-# wipefs -a /dev/sdc
-# wipefs -a /dev/sdd
-# wipefs -a /dev/sde
-# wipefs -a /dev/sdg
-# lsblk
-# parted /dev/nvme0n1 -- mklabel gpt
-# parted /dev/nvme0n1 -- mkpart root ext4 512MB -8GB
-# parted /dev/nvme0n1 -- mkpart swap linux-swap -8GB 100%
-# parted /dev/nvme0n1 -- mkpart ESP fat32 1MB 512MB
-# parted /dev/nvme0n1 -- set 3 esp on
-# mkfs.ext4 -L nixos /dev/nvme0n1p1
-# mkswap -L swap /dev/nvme0n1p2
-# mkfs.fat -F 32 -n boot /dev/nvme0n1p3
-# mount /dev/disk/by-label/nixos /mnt
-# mkdir -p /mnt/boot
-# mount /dev/disk/by-label/boot /mnt/boot
-# swapon /dev/nvme0n1p2
-#
-# nixos-generate-config --root /mnt
-# vim /mnt/etc/nixos/configuration.nix
-#
-# nixos-install
-#
-#
-# # Script the zfs partitioning
-# p
-
-# p
-# vim: ts=4 sw=4 ai noet si sta fdm=marker
-#
-# Edit the variables below. Then run this by issuing:
-# `bash ./nixos-zfs-setup.sh`
-#
-# WARNING: this script will clear partition tables of existing disks.
-# Make sure that you set the DISK variable correctly. Additionally, it
-# is a good idea to clean your disk(s) current partitions first. Use the
-# command `wipefs` for this.
-#
-###############################################################################
-#    nixos-zfs-setup.sh: a bash script that sets up zfs disks for NixOS.      #
-#      Copyright (C) 2022  Mark (voidzero) van Dijk, The Netherlands.         #
-#                                                                             #
-#    This program is free software: you can redistribute it and/or modify     #
-#    it under the terms of the GNU General Public License as published by     #
-#    the Free Software Foundation, either version 3 of the License, or        #
-#    (at your option) any later version.                                      #
-#                                                                             #
-#    This program is distributed in the hope that it will be useful,          #
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of           #
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the            #
-#    GNU General Public License for more details.                             #
-#                                                                             #
-#    You should have received a copy of the GNU General Public License        #
-#    along with this program.  If not, see <https://www.gnu.org/licenses/>.   #
-###############################################################################
-
+## DELETE EVERYTHING AND GOOD LUCK
+## SUPER HELPFUL
 set -ex
 
-DISK=(/dev/sda /dev/sdb /dev/sdc /dev/sde /dev/sdh /dev/sdi)
-#DISK=(/dev/vda /dev/vdb)
+BOOT_DISK=(/dev/nvme0n1)
+BIG_BOY_DISK=(/dev/sda /dev/sdb /dev/sdc /dev/sde /dev/sdh /dev/sdi)
 
 # How to name the partitions. This will be visible in 'gdisk -l /dev/disk' and
 # in /dev/disk/by-partlabel.
@@ -69,6 +12,7 @@ PART_EFI="efiboot"
 PART_BOOT="bpool"
 PART_SWAP="swap"
 PART_ROOT="rpool"
+PART_TANK="tank"
 
 # How much swap per disk?
 SWAPSIZE=2G
@@ -78,18 +22,23 @@ SWAPSIZE=2G
 # mirror, raidz types and draid types. You will have to manually add other
 # devices like spares, intent log devices, cache and so on. Here we're just
 # setting this up for installation after all.
-ZFS_BOOT_VDEV="raidz"
-ZFS_ROOT_VDEV="raidz"
+#ZFS_BOOT_VDEV="raidz"
+#ZFS_ROOT_VDEV="raidz"
+ZFS_TANK_VDEV="raidz"
 
 # How to name the boot pool and root pool.
 ZFS_BOOT="bpool"
 ZFS_ROOT="rpool"
+ZFS_TANK="tank"
 
 # How to name the root volume in which nixos will be installed.
 # If ZFS_ROOT is set to "rpool" and ZFS_ROOT_VOL is set to "nixos",
 # nixos will be installed in rpool/nixos, with a few extra subvolumes
 # (datasets).
 ZFS_ROOT_VOL="nixos"
+# stuff in nixos gets erased. stuff below doesn't.
+ZFS_SAFE_VOL="safe"
+SNAPSHOT_NAME="blank"
 
 # Generate a root password with mkpasswd -m SHA-512
 ROOTPW='$6$rrL.IYVFk5RgIrtt$uQQSVWYiuGIJucBM3yYWmY.94teIhiUNQ2inuFqPMfwGwZk2m32i7vhASG3sX6cVOqz/TrH9RPfp1O3vVbyLC/'
@@ -108,7 +57,7 @@ MAINCFG="/mnt/etc/nixos/configuration.nix"
 HWCFG="/mnt/etc/nixos/hardware-configuration.nix"
 ZFSCFG="/mnt/etc/nixos/zfs.nix"
 
-if [[ ${#DISK[*]} -eq 1 ]] && [[ -n ${ZFS_BOOT_VDEV} || -n ${ZFS_ROOT_VDEV} ]]
+if [[ ${#BOOT_DISK[*]} -eq 1 ]] && [[ -n ${ZFS_BOOT_VDEV} || -n ${ZFS_ROOT_VDEV} ]]
 then
 	echo "Error: You have only specified one disk. ZFS_BOOT_VDEV and ZFS_ROOT_DEV must be unset or empty." >&2
 	false
@@ -122,8 +71,23 @@ fi
 
 set -x
 
+## WIPE ALL THEM DAMN DISKS
+wipe_disk() {
+    local disk="$1"
+    echo "Wiping ${disk}..."
+    wipefs --all --force "$disk"
+    dd if=/dev/zero of="$disk" bs=1M count=10 status=progress || true
+    dd if=/dev/zero of="$disk" bs=1M count=10 seek=$(( $(blockdev --getsz $disk) - 10 )) || true
+}
+
+echo "Wiping all drives for ${ZFS_TANK_POOL}..."
+for disk in "${BIG_BOY_DISK[@]}"; do
+    wipe_disk "$disk"
+done
+
+# PREP bootdisk for ufei boots
 i=0 SWAPDEVS=()
-for d in ${DISK[*]}
+for d in ${BOOT_DISK[*]}
 do
 	sgdisk --zap-all ${d}
 	sgdisk -a1 -n1:0:+100K -t1:EF02 -c 1:${PART_MBR}${i} ${d}
@@ -179,38 +143,49 @@ zfs create ${ZFS_BOOT}/${ZFS_ROOT_VOL}
 
 # Create the root dataset
 zfs create -o mountpoint=/     ${ZFS_ROOT}/${ZFS_ROOT_VOL}
+zfs snapshot ${ZFS_ROOT}/${ZFS_ROOT_VOL}@${SNAPSHOT_NAME}
 
 # Create datasets (subvolumes) in the root dataset
-zfs create ${ZFS_ROOT}/${ZFS_ROOT_VOL}/home
-(( $IMPERMANENCE )) && zfs create ${ZFS_ROOT}/${ZFS_ROOT_VOL}/keep || true
+# (( $IMPERMANENCE )) && zfs create ${ZFS_ROOT}/${ZFS_ROOT_VOL}/keep || true
 zfs create -o atime=off ${ZFS_ROOT}/${ZFS_ROOT_VOL}/nix
 zfs create ${ZFS_ROOT}/${ZFS_ROOT_VOL}/root
 zfs create ${ZFS_ROOT}/${ZFS_ROOT_VOL}/usr
 zfs create ${ZFS_ROOT}/${ZFS_ROOT_VOL}/var
+# Don't erase home lmao.. also don't erase anything i specify in /persist
+zfs create ${ZFS_ROOT}/${ZFS_SAFE_VOL}/home
+zfs create ${ZFS_ROOT}/${ZFS_SAFE_VOL}/persist 
+
+
 
 # Create datasets (subvolumes) in the boot dataset
 # This comes last because boot order matters
 zfs create -o mountpoint=/boot ${ZFS_BOOT}/${ZFS_ROOT_VOL}/boot
 
 # Make empty snapshots of impermanent volumes
-if (( $IMPERMANENCE ))
-then
-	for i in "" /usr /var
-	do
-		zfs snapshot ${ZFS_ROOT}/${ZFS_ROOT_VOL}${i}@${EMPTYSNAP}
-	done
-fi
+# if (( $IMPERMANENCE ))
+# then
+# 	for i in "" /usr /var
+# 	do
+# 		zfs snapshot ${ZFS_ROOT}/${ZFS_ROOT_VOL}${i}@${EMPTYSNAP}
+# 	done
+# fi
 
 # Create, mount and populate the efi partitions
-i=0
-for d in ${DISK[*]}
-do
-	mkfs.vfat -n EFI /dev/disk/by-partlabel/${PART_EFI}${i}
-	mkdir -p /mnt/boot/efis/${PART_EFI}${i}
-	mount -t vfat /dev/disk/by-partlabel/${PART_EFI}${i} /mnt/boot/efis/${PART_EFI}${i}
-	(( i++ )) || true
+for i in ${BOOT_DISK[*]}; do
+ mkfs.vfat -n EFI "${i}"-part1
+ mount -t vfat -o fmask=0077,dmask=0077,iocharset=iso8859-1,X-mount.mkdir "${i}"-part1 /mnt/boot
+ break
 done
-unset i d
+# LEGACY???
+# i=0
+# for d in ${BOOT_DISK[*]}
+# do
+# 	mkfs.vfat -n EFI /dev/disk/by-partlabel/${PART_EFI}${i}
+# 	mkdir -p /mnt/boot/efis/${PART_EFI}${i}
+# 	mount -t vfat /dev/disk/by-partlabel/${PART_EFI}${i} /mnt/boot/efis/${PART_EFI}${i}
+# 	(( i++ )) || true
+# done
+# unset i d
 
 # Mount the first drive's efi partition to /mnt/boot/efi
 mkdir /mnt/boot/efi
@@ -223,35 +198,31 @@ touch /mnt/etc/zfs/zpool.cache
 chmod a-w /mnt/etc/zfs/zpool.cache
 chattr +i /mnt/etc/zfs/zpool.cache
 
+
+# Create the ZFS pool for hard drives
+echo "Creating ZFS pool ${ZFS_TANK}..."
+zpool create -o ashift=12 -O compression=zstd -O acltype=posixacl \
+    -O xattr=sa -O relatime=on -m /$ZFS_TANK \
+    $ZFS_TANK ${BIG_BOY_DISK[@]}
+
 # Generate and edit configs
 nixos-generate-config --root /mnt
 
 sed -i -e "s|./hardware-configuration.nix|& ./zfs.nix|" ${MAINCFG}
 
-if (( $IMPERMANENCE ))
-then
-	echo '{ config, lib, pkgs, ... }:'
-else
-	echo '{ config, pkgs, ... }:'
-fi | tee -a ${ZFSCFG}
+echo '{ config, lib, pkgs, ... }:' | tee -a ${ZFSCFG}
 
 tee -a ${ZFSCFG} <<EOF
 
 {
   boot.supportedFilesystems = [ "zfs" ];
   networking.hostId = "$(head -c 8 /etc/machine-id)";
-  boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
   boot.zfs.devNodes = "/dev/disk/by-partlabel";
-EOF
-
-if (( $IMPERMANENCE ))
-then
-	tee -a ${ZFSCFG} <<EOF
   boot.initrd.postDeviceCommands = lib.mkAfter ''
-    zfs rollback -r ${ZFS_ROOT}/${ZFS_ROOT_VOL}@${EMPTYSNAP}
+  zfs rollback -r ${ZFS_ROOT}/${ZFS_SAFE_VOL}@${SNAPSHOT_NAME}
   '';
 EOF
-fi
+
 
 # Remove boot.loader stuff, it's to be added to zfs.nix
 sed -i '/boot.loader/d' ${MAINCFG}
@@ -261,7 +232,7 @@ sed -i '/boot.loader/d' ${MAINCFG}
 sed -i -e 's;^  \(services.xserver\);  #\1;' ${MAINCFG}
 
 tee -a ${ZFSCFG} <<-'EOF'
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+  boot.loader.efi.efiSysMountPoint = "/boot/efis/$(echo ${BOOT_DISK[*]} | cut -f1 -d\ | sed 's|/dev/disk/by-id/||')-part1";
   boot.loader.efi.canTouchEfiVariables = false;
   boot.loader.generationsDir.copyKernels = true;
   boot.loader.grub.efiInstallAsRemovable = true;
@@ -270,27 +241,10 @@ tee -a ${ZFSCFG} <<-'EOF'
   boot.loader.grub.efiSupport = true;
   boot.loader.grub.zfsSupport = true;
 
-  boot.loader.grub.extraPrepareConfig = ''
-    mkdir -p /boot/efis
-    for i in  /boot/efis/*; do mount $i ; done
-
-    mkdir -p /boot/efi
-    mount /boot/efi
-  '';
-
-  boot.loader.grub.extraInstallCommands = ''
-    ESP_MIRROR=$(${pkgs.coreutils}/bin/mktemp -d)
-    ${pkgs.coreutils}/bin/cp -r /boot/efi/EFI $ESP_MIRROR
-    for i in /boot/efis/*; do
-      ${pkgs.coreutils}/bin/cp -r $ESP_MIRROR/EFI $i
-    done
-    ${pkgs.coreutils}/bin/rm -rf $ESP_MIRROR
-  '';
-
   boot.loader.grub.devices = [
 EOF
 
-for d in ${DISK[*]}; do
+for d in ${BOOT_DISK[*]}; do
   printf "    \"${d}\"\n" >>${ZFSCFG}
 done
 
