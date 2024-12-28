@@ -1,9 +1,12 @@
 ## DELETE EVERYTHING AND GOOD LUCK
 ## SUPER HELPFUL
+
+### while installing use command:
+### swapoff -a && zpool destroy rpool && zpool destroy bpool && zpool destroy tank && ./tmp.sh
 set -ex
 
 BOOT_DISK=(/dev/nvme0n1)
-BIG_BOY_DISK=(/dev/sda /dev/sdb /dev/sdc /dev/sde /dev/sdh /dev/sdi)
+BIG_BOY_DISK=(/dev/sda /dev/sdb /dev/sdc /dev/sde /dev/sdf /dev/sdg)
 
 # How to name the partitions. This will be visible in 'gdisk -l /dev/disk' and
 # in /dev/disk/by-partlabel.
@@ -77,7 +80,6 @@ wipe_disk() {
     echo "Wiping ${disk}..."
     wipefs --all --force "$disk"
     dd if=/dev/zero of="$disk" bs=1M count=10 status=progress || true
-    dd if=/dev/zero of="$disk" bs=1M count=10 seek=$(( $(blockdev --getsz $disk) - 10 )) || true
 }
 
 echo "Wiping all drives for ${ZFS_TANK_POOL}..."
@@ -90,7 +92,7 @@ i=0 SWAPDEVS=()
 for d in ${BOOT_DISK[*]}
 do
 	sgdisk --zap-all ${d}
-	sgdisk -a1 -n1:0:+100K -t1:EF02 -c 1:${PART_MBR}${i} ${d}
+  sgdisk -a1 -n1:0:+1M -t1:EF02 -c 1:${PART_MBR}${i} ${d}
 	sgdisk -n2:1M:+1G -t2:EF00 -c 2:${PART_EFI}${i} ${d}
 	sgdisk -n3:0:+4G -t3:BE00 -c 3:${PART_BOOT}${i} ${d}
 	sgdisk -n4:0:+${SWAPSIZE} -t4:8200 -c 4:${PART_SWAP}${i} ${d}
@@ -144,6 +146,8 @@ zfs create ${ZFS_BOOT}/${ZFS_ROOT_VOL}
 # Create the root dataset
 zfs create -o mountpoint=/     ${ZFS_ROOT}/${ZFS_ROOT_VOL}
 zfs snapshot ${ZFS_ROOT}/${ZFS_ROOT_VOL}@${SNAPSHOT_NAME}
+# And the safe dataset
+zfs create -o mountpoint=/persist     ${ZFS_ROOT}/${ZFS_SAFE_VOL}
 
 # Create datasets (subvolumes) in the root dataset
 # (( $IMPERMANENCE )) && zfs create ${ZFS_ROOT}/${ZFS_ROOT_VOL}/keep || true
@@ -171,39 +175,31 @@ zfs create -o mountpoint=/boot ${ZFS_BOOT}/${ZFS_ROOT_VOL}/boot
 # fi
 
 # Create, mount and populate the efi partitions
-for i in ${BOOT_DISK[*]}; do
- mkfs.vfat -n EFI "${i}"-part1
- mount -t vfat -o fmask=0077,dmask=0077,iocharset=iso8859-1,X-mount.mkdir "${i}"-part1 /mnt/boot
- break
-done
-# LEGACY???
-# i=0
-# for d in ${BOOT_DISK[*]}
-# do
-# 	mkfs.vfat -n EFI /dev/disk/by-partlabel/${PART_EFI}${i}
-# 	mkdir -p /mnt/boot/efis/${PART_EFI}${i}
-# 	mount -t vfat /dev/disk/by-partlabel/${PART_EFI}${i} /mnt/boot/efis/${PART_EFI}${i}
-# 	(( i++ )) || true
+# for i in ${BOOT_DISK[*]}; do
+#  mkfs.vfat -n EFI "${i}"-part1
+#  mount -t vfat -o fmask=0077,dmask=0077,iocharset=iso8859-1,X-mount.mkdir "${i}"-part1 /mnt/boot
+#  break
 # done
-# unset i d
+# LEGACY???
+i=0
+for d in ${BOOT_DISK[*]}
+do
+	mkfs.vfat -n EFI /dev/disk/by-partlabel/${PART_EFI}${i}
+	mkdir -p /mnt/boot/efis/${PART_EFI}${i}
+	mount -t vfat /dev/disk/by-partlabel/${PART_EFI}${i} /mnt/boot/efis/${PART_EFI}${i}
+	(( i++ )) || true
+done
+unset i d
 
 # Mount the first drive's efi partition to /mnt/boot/efi
 mkdir /mnt/boot/efi
 mount -t vfat /dev/disk/by-partlabel/${PART_EFI}0 /mnt/boot/efi
 
-# Make sure we won't trip over zpool.cache later
-mkdir -p /mnt/etc/zfs/
-rm -f /mnt/etc/zfs/zpool.cache
-touch /mnt/etc/zfs/zpool.cache
-chmod a-w /mnt/etc/zfs/zpool.cache
-chattr +i /mnt/etc/zfs/zpool.cache
-
-
 # Create the ZFS pool for hard drives
 echo "Creating ZFS pool ${ZFS_TANK}..."
 zpool create -o ashift=12 -O compression=zstd -O acltype=posixacl \
     -O xattr=sa -O relatime=on -m /$ZFS_TANK \
-    $ZFS_TANK ${BIG_BOY_DISK[@]}
+    $ZFS_TANK raidz2 ${BIG_BOY_DISK[@]}
 
 # Generate and edit configs
 nixos-generate-config --root /mnt
@@ -232,7 +228,7 @@ sed -i '/boot.loader/d' ${MAINCFG}
 sed -i -e 's;^  \(services.xserver\);  #\1;' ${MAINCFG}
 
 tee -a ${ZFSCFG} <<-'EOF'
-  boot.loader.efi.efiSysMountPoint = "/boot/efis/$(echo ${BOOT_DISK[*]} | cut -f1 -d\ | sed 's|/dev/disk/by-id/||')-part1";
+  boot.loader.efi.efiSysMountPoint = "/boot/efis/efiboot0";
   boot.loader.efi.canTouchEfiVariables = false;
   boot.loader.generationsDir.copyKernels = true;
   boot.loader.grub.efiInstallAsRemovable = true;
