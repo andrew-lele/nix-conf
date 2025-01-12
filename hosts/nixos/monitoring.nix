@@ -14,7 +14,7 @@ let
       #
       dashboards.settings.providers = [
         {
-          name = "my dashboards";
+          name = "nix'd dashboards";
           options.path = "/etc/grafana-dashboards";
         }
       ];
@@ -30,11 +30,7 @@ let
         {
           name = "Loki";
           type = "loki";
-          url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}";
-        }
-        {
-          name = "ZFS";
-          type = "7968";
+          url = "http://jihun.andle.day:${toString config.services.loki.configuration.server.http_listen_port}";
         }
         # But not all - c.f. https://github.com/fr-ser/grafana-sqlite-datasource/issues/141
       ];
@@ -63,6 +59,11 @@ let
         enabledCollectors = [ "systemd" ];
         enable = true;
       };
+      zfs = {
+        enable = true;
+        port = ports.prometheusZfs;
+
+      };
     };
 
     scrapeConfigs = [
@@ -71,7 +72,17 @@ let
         static_configs = [
           {
             targets = [
-              "127.0.0.1:${toString config.services.prometheus.exporters.node.port}"
+              "jihun.andle.day:${toString config.services.prometheus.exporters.node.port}"
+            ];
+          }
+        ];
+      }
+      {
+        job_name = "zfs";
+        static_configs = [
+          {
+            targets = [
+              "jihun.andle.day:${toString config.services.prometheus.exporters.zfs.port}"
             ];
           }
         ];
@@ -287,7 +298,7 @@ let
       };
       clients = [
         {
-          url = "http://127.0.0.1:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push";
+          url = "http://jihun.andle.day:${toString config.services.loki.configuration.server.http_listen_port}/loki/api/v1/push";
         }
       ];
       scrape_configs = [
@@ -319,6 +330,6 @@ in
     inherit prometheus;
     inherit tempo;
     inherit promtail;
-
   };
+
 }

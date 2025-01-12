@@ -3,6 +3,7 @@
   grafana = 3000;
   prometheus = 3001;
   prometheusNode = 3002;
+  prometheusZfs = 3010;
   loki = 3003;
   tempo = 3004;
   tempoThriftHttp = 3005;

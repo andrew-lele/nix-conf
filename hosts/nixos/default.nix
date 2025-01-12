@@ -35,7 +35,7 @@ in
 
     ./hardware-configuration.nix
     ./zfs.nix
-#    ./boot.nix
+    #    ./boot.nix
     agenix.nixosModules.default
   ];
   # Backup user is always good to have :)
@@ -237,5 +237,29 @@ in
   fileSystems."/export/ba" = {
     device = "/export/ba";
     options = [ "bind" ];
+  };
+
+  # be a real nix user and loop thru the dashboards folder
+  environment.etc = {
+    "grafana-dashboards/zfs/arc.json" = {
+      source = ../../dashboards/zfs.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana-dashboards/disk/util.json" = {
+      source = ../../dashboards/disk-util.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana-dashboards/home.json" = {
+      source = ../../dashboards/home.json;
+      group = "grafana";
+      user = "grafana";
+    };
+    "grafana-dashboards/node.json" = {
+      source = ../../dashboards/node-exported.json;
+      group = "grafana";
+      user = "grafana";
+    };
   };
 }
