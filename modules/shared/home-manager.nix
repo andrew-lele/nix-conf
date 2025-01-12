@@ -28,6 +28,7 @@ in
       commit.gpgsign = true;
       pull.rebase = true;
       rebase.autoStash = true;
+      push.autoSetupRemote = true;
 
     };
     lfs = {
