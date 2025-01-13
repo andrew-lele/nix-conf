@@ -40,4 +40,5 @@ shared-packages
 
   #Networking
   unifi
+  zigbee2mqtt
 ]

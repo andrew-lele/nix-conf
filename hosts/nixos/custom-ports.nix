@@ -16,4 +16,7 @@
   unifi2 = 10001;
   unifi3 = 3478;
   unifi4 = 8443;
+  homeAssistant = 8123;
+  mqtt = 1883;
+  z2mFrontend = 8099;
 }
