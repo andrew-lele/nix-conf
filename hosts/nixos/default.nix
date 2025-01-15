@@ -32,6 +32,8 @@ in
     ../../modules/shared
     ../../modules/shared/cachix
     ./monitoring.nix
+    ./homeassistant.nix
+    ./zigbee2mqtt.nix
 
     ./hardware-configuration.nix
     ./zfs.nix
