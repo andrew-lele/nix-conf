@@ -1,3 +1,4 @@
+# Heavily inspiried by https://github.com/azuwis/nix-config
 {
   description = "0-100";
   inputs = {
@@ -31,151 +32,20 @@
       url = "git+ssh://git@github.com/andrew-lele/nix-secrets.git";
       flake = false;
     };
+    flake-parts = {
+      url = "github:hercules-ci/flake-parts";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
+    };
     alacritty-theme.url = "github:alexghr/alacritty-theme.nix";
     mac-app-util.url = "github:hraban/mac-app-util";
   };
   outputs =
-    {
-      self,
-      alacritty-theme,
-      darwin,
-      nix-homebrew,
-      homebrew-bundle,
-      homebrew-core,
-      homebrew-cask,
-      home-manager,
-      nixpkgs,
-      disko,
-      agenix,
-      secrets,
-      mac-app-util,
-    }@inputs:
-    # outputs = { self, darwin,  home-manager, nixpkgs, disko, agenix, secrets, nixvim } @inputs:
-    let
-      user = "le";
-      linuxSystems = [
-        "x86_64-linux"
-        "aarch64-linux"
-      ];
-      darwinSystems = [
-        "aarch64-darwin"
+    inputs@{ flake-parts, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      systems = [
         "x86_64-darwin"
+        "x86_64-linux"
       ];
-      forAllSystems = f: nixpkgs.lib.genAttrs (linuxSystems ++ darwinSystems) f;
-      devShell =
-        system:
-        let
-          pkgs = nixpkgs.legacyPackages.${system};
-        in
-        {
-          default =
-            with pkgs;
-            mkShell {
-              nativeBuildInputs = with pkgs; [
-                bashInteractive
-                git
-                age
-                age-plugin-yubikey
-              ];
-              shellHook = with pkgs; ''
-                export EDITOR=vim
-              '';
-            };
-        };
-      mkApp = scriptName: system: {
-        type = "app";
-        program = "${
-          (nixpkgs.legacyPackages.${system}.writeScriptBin scriptName ''
-            #!/usr/bin/env bash
-            PATH=${nixpkgs.legacyPackages.${system}.git}/bin:$PATH
-            echo "Running ${scriptName} for ${system}"
-            exec ${self}/apps/${system}/${scriptName}
-          '')
-        }/bin/${scriptName}";
-      };
-      mkLinuxApps = system: {
-        "apply" = mkApp "apply" system;
-        "build-switch" = mkApp "build-switch" system;
-        "copy-keys" = mkApp "copy-keys" system;
-        "create-keys" = mkApp "create-keys" system;
-        "check-keys" = mkApp "check-keys" system;
-        "install" = mkApp "install" system;
-        "install-with-secrets" = mkApp "install-with-secrets" system;
-      };
-      mkDarwinApps = system: {
-        "apply" = mkApp "apply" system;
-        "build" = mkApp "build" system;
-        "build-switch" = mkApp "build-switch" system;
-        "copy-keys" = mkApp "copy-keys" system;
-        "create-keys" = mkApp "create-keys" system;
-        "check-keys" = mkApp "check-keys" system;
-      };
-    in
-    {
-      devShells = forAllSystems devShell;
-      apps =
-        nixpkgs.lib.genAttrs linuxSystems mkLinuxApps
-        // nixpkgs.lib.genAttrs darwinSystems mkDarwinApps;
-
-      darwinConfigurations = nixpkgs.lib.genAttrs darwinSystems (
-        system:
-        darwin.lib.darwinSystem {
-          inherit system;
-          specialArgs = inputs;
-          modules = [
-            # Overlays
-            (
-              { config, pkgs, ... }:
-              {
-                nixpkgs.overlays = [ alacritty-theme.overlays.default ];
-              }
-            )
-            home-manager.darwinModules.home-manager
-            nix-homebrew.darwinModules.nix-homebrew
-            mac-app-util.darwinModules.default
-            {
-              nix-homebrew = {
-                inherit user;
-                enable = true;
-                taps = {
-                  "homebrew/homebrew-core" = homebrew-core;
-                  "homebrew/homebrew-cask" = homebrew-cask;
-                  "homebrew/homebrew-bundle" = homebrew-bundle;
-                };
-                mutableTaps = false;
-                autoMigrate = true;
-              };
-            }
-            ./hosts/darwin
-          ];
-        }
-      );
-
-      nixosConfigurations = nixpkgs.lib.genAttrs linuxSystems (
-        system:
-        nixpkgs.lib.nixosSystem {
-          inherit system;
-          specialArgs = inputs;
-          modules = [
-            # overlays
-            (
-              { config, pkgs, ... }:
-              {
-                nixpkgs.overlays = [ alacritty-theme.overlays.default ];
-              }
-            )
-            disko.nixosModules.disko
-            home-manager.nixosModules.home-manager
-            {
-              home-manager = {
-                useGlobalPkgs = true;
-                useUserPackages = true;
-                users.${user} = import ./modules/nixos/home-manager.nix;
-              };
-            }
-            ./hosts/nixos
-          ];
-        }
-      );
+      imports = [ ./flakes ];
     };
 }

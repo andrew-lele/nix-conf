@@ -1,0 +1,29 @@
+{
+  inputs,
+  pkgs,
+  ...
+}:
+
+{
+  imports = ./any/home;
+
+  # my = {
+  #   difftastic.enable = true;
+  #   direnv.enable = true;
+  #   editorconfig.enable = true;
+  #   # helix.enable = true;
+  #   jujutsu.enable = true;
+  #   git.enable = true;
+  #   # gitui.enable = true;
+  #   less.enable = true;
+  #   neovim.enable = true;
+  #   yazi.enable = true;
+  #   zsh.enable = true;
+  # };
+
+  # let standalone home-manager and home-manager in nixos/nix-darwin use the same derivation
+  home.packages = [
+    (pkgs.callPackage (inputs.home-manager + /home-manager) { path = inputs.home-manager; })
+  ];
+  home.stateVersion = "24.05";
+}
